@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GS Art Center - 1F 좌석배치도 시뮬레이터</title>
+  <link href="gs_arts_center_ui.css" rel="stylesheet" type="text/css">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --panel-dark: rgba(13, 17, 28, 0.85);
+      --accent-gold: #fbbf24;
+      --accent-amber: #f59e0b;
+      --accent-crimson: #ef4444;
+      --text-light: #f8fafc;
+      --border-light: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--panel-dark);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+    }
+
+    /* 극장 1층 배치도 컨테이너 크기 고정 (wrapper 제거 대응, 종횡비 찌그러짐 방지) */
+    .seatmap-img-floor-section {
+      position: relative;
+      width: 1424px;
+      /* 1424px 크기 고정 */
+      height: 1252px;
+      /* 1252px 크기 고정 */
+      margin: 0 auto;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      border: none !important;
+      display: none;
+    }
+
+    .seatmap-img-floor-section.active {
+      display: block !important;
+    }
+
+    /* 전체 극장 배경 레이아웃 (비율 완전 보장) */
+    .seatmap-bg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* 3개 구역 SVG들이 absolute로 배치될 영역 */
+    .svg-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    /* 각 구역별 정교한 absolute 백분율 위치 셋팅 (배경 크기 비례 대응) */
+    .zone-overlay {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #floor1f-zone-a {
+      left: 355px;
+      top: 442px;
+      width: 186px;
+      height: 565px;
+    }
+
+    #floor1f-zone-b {
+      left: 584px;
+      top: 467px;
+      width: 258px;
+      height: 556px;
+    }
+
+    #floor1f-zone-c {
+      left: 886px;
+      top: 442px;
+      width: 186px;
+      height: 565px;
+    }
+
+    /* 2층 극장 배치도 고정 크기 및 구역 PX 보정 */
+    #floor-section-2F {
+      width: 1424px;
+      height: 930px;
+    }
+
+    #floor2f-zone-a {
+      left: 355px;
+      top: 442px;
+      width: 186px;
+      height: 264px;
+    }
+
+    #floor2f-zone-b {
+      left: 585px;
+      top: 462px;
+      width: 258px;
+      height: 220px;
+    }
+
+    #floor2f-zone-c {
+      left: 882px;
+      top: 442px;
+      width: 186px;
+      height: 264px;
+    }
+
+    /* 3층 극장 배치도 고정 크기 및 구역 PX 보정 */
+    #floor-section-3F {
+      width: 1424px;
+      height: 930px;
+    }
+
+    #floor3f-zone-a {
+      left: 390px;
+      top: 438px;
+      width: 150px;
+      height: 184px;
+    }
+
+    #floor3f-zone-b {
+      left: 584px;
+      top: 462px;
+      width: 258px;
+      height: 220px;
+    }
+
+    #floor3f-zone-c {
+      left: 884px;
+      top: 438px;
+      width: 150px;
+      height: 184px;
+    }
+
+    .zone-overlay svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* SVG 내부 좌석 스타일 (sample_uI_1f.png 와 동일한 톤앤매너 매핑) */
+    svg {
+      cursor: grab !important;
+    }
+
+    svg rect[id^="View_"] {
+      fill: #ffffff !important;
+      /* stroke: #cccccc !important;
+      stroke-width: 1px !important; */
+      cursor: pointer !important;
+      pointer-events: all !important;
+      transition: all 0.15s ease;
+    }
+
+    /* 호버 시 옅은 파란색 배경 + 파란 테두리 */
+    svg rect[id^="View_"]:hover {
+      fill: #aaaaaa !important;
+      /* stroke: #2b5f8a !important; */
+      /* stroke-width: 1.5px !important; */
+    }
+
+    /* 선택된 좌석 상태 스타일 (두꺼운 검은 테두리) */
+    svg rect[id^="View_"].selected-active {
+      fill: #61dd80 !important;
+      /* stroke: #7bff00 !important; */
+      /* stroke-width: 1px !important; */
+    }
+
+    /* 디버그 상태바 */
+    .info-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 15px 25px;
+      font-size: 0.9rem;
+    }
+
+    .info-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    .info-display {
+      font-weight: 600;
+      color: var(--accent-gold);
+    }
+
+    /* 줌 컨텐츠의 기준점을 명시적으로 정중앙으로 강제 지정 */
+    #seatmap-zoom-content {
+      transform-origin: center center !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SEAT MAP POPUP -->
+  <div id="seatmap-overlay" class="seatmap-overlay active">
+    <div class="seatmap-popup">
+      <button class="seatmap-close-btn" aria-label="Close">
+        <img src="img\04. Seat View Page UI\SVP_icon_close.png" alt="Close"
+          style="width: 36px; height: 36px; object-fit: contain; display: block;" />
+      </button>
+
+      <div class="seatmap-header">
+        <div class="seatmap-header-line"></div>
+        <div class="seatmap-header-text"> 좌석 배치도에서 원하는 좌석을 선택하세요.</div>
+      </div>
+
+      <div class="seatmap-content">
+        <!-- Left Floor Selection -->
+        <div class="seatmap-floor-selector">
+          <button class="floor-btn active" data-floor="1F">1층</button>
+          <button class="floor-btn" data-floor="2F">2층</button>
+          <button class="floor-btn" data-floor="3F">3층</button>
+        </div>
+
+        <!-- Center Map Image -->
+        <div class="seatmap-map-container" id="seatmap-map-container">
+          <!-- Zoom Controls -->
+          <div class="seatmap-zoom-controls">
+            <button id="seatmap-zoom-in" title="Zoom In">+</button>
+            <button id="seatmap-zoom-out" title="Zoom Out">-</button>
+            <button id="seatmap-zoom-reset" title="Reset">⟲</button>
+          </div>
+
+          <div id="seatmap-zoom-content"
+            style="width: 100%; height: 100%; display: flex !important; justify-content: center; align-items: center;">
+            <div class="seatmap-img-floor-section active" id="floor-section-1F">
+              <!-- 배경 이미지 및 SVG 레이어가 wrapper 없이 다이렉트로 삽입됨 -->
+              <img class="seatmap-bg" src="img/seatmap/1f/SVP_img_1f.png" alt="Theatre Layout Background">
+
+              <div class="svg-container">
+                <div id="floor1f-zone-a" class="zone-overlay"></div>
+                <div id="floor1f-zone-b" class="zone-overlay"></div>
+                <div id="floor1f-zone-c" class="zone-overlay"></div>
+              </div>
+            </div>
+            <div class="seatmap-img-floor-section" id="floor-section-2F">
+              <img class="seatmap-bg" src="img/seatmap/2f/SVP_img_2f.png" alt="Theatre Layout Background">
+              <div class="svg-container">
+                <div id="floor2f-zone-a" class="zone-overlay"></div>
+                <div id="floor2f-zone-b" class="zone-overlay"></div>
+                <div id="floor2f-zone-c" class="zone-overlay"></div>
+              </div>
+            </div>
+            <div class="seatmap-img-floor-section" id="floor-section-3F">
+              <img class="seatmap-bg" src="img/seatmap/3f/SVP_img_3f.png" alt="Theatre Layout Background">
+              <div class="svg-container">
+                <div id="floor3f-zone-a" class="zone-overlay"></div>
+                <div id="floor3f-zone-b" class="zone-overlay"></div>
+                <div id="floor3f-zone-c" class="zone-overlay"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Right Section Selection -->
+        <div class="seatmap-section-selector">
+          <button class="section-btn active" data-floor="1F" data-zone="A"><span>1층</span> A블록</button>
+          <button class="section-btn" data-floor="1F" data-zone="B"><span>1층</span> B블록</button>
+          <button class="section-btn" data-floor="1F" data-zone="C"><span>1층</span> C블록</button>
+          <button class="section-btn" data-floor="2F" data-zone="A"><span>2층</span> A블록</button>
+          <button class="section-btn" data-floor="2F" data-zone="B"><span>2층</span> B블록</button>
+          <button class="section-btn" data-floor="2F" data-zone="C"><span>2층</span> C블록</button>
+          <button class="section-btn" data-floor="3F" data-zone="A"><span>3층</span> A블록</button>
+          <button class="section-btn" data-floor="3F" data-zone="B"><span>3층</span> B블록</button>
+          <button class="section-btn" data-floor="3F" data-zone="C"><span>3층</span> C블록</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="info-footer">
+      <div class="info-status">
+        <span class="status-dot"></span>
+        <span>단일 인라인 SVG 연동 모드: <strong>정상</strong></span>
+      </div>
+      <div>선택된 좌석 ID: <span id="selected-seat-id" class="info-display">없음</span></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. 비동기 패치를 통해 단일 인라인 SVG 구조 주입 (1F, 2F, 3F)
+      Promise.all([
+        fetch('img/seatmap/1f/SVP_svg_1f_A.svg').then(res => res.text()),
+        fetch('img/seatmap/1f/SVP_svg_1f_B.svg').then(res => res.text()),
+        fetch('img/seatmap/1f/SVP_svg_1f_C.svg').then(res => res.text()),
+        fetch('img/seatmap/2f/SVP_svg_2f_A.svg').then(res => res.text()),
+        fetch('img/seatmap/2f/SVP_svg_2f_B.svg').then(res => res.text()),
+        fetch('img/seatmap/2f/SVP_svg_2f_C.svg').then(res => res.text()),
+        fetch('img/seatmap/3f/SVP_svg_3f_A.svg').then(res => res.text()),
+        fetch('img/seatmap/3f/SVP_svg_3f_B.svg').then(res => res.text()),
+        fetch('img/seatmap/3f/SVP_svg_3f_C.svg').then(res => res.text())
+      ])
+        .then(([svg1A, svg1B, svg1C, svg2A, svg2B, svg2C, svg3A, svg3B, svg3C]) => {
+          document.getElementById('floor1f-zone-a').innerHTML = svg1A;
+          document.getElementById('floor1f-zone-b').innerHTML = svg1B;
+          document.getElementById('floor1f-zone-c').innerHTML = svg1C;
+          document.getElementById('floor2f-zone-a').innerHTML = svg2A;
+          document.getElementById('floor2f-zone-b').innerHTML = svg2B;
+          document.getElementById('floor2f-zone-c').innerHTML = svg2C;
+          document.getElementById('floor3f-zone-a').innerHTML = svg3A;
+          document.getElementById('floor3f-zone-b').innerHTML = svg3B;
+          document.getElementById('floor3f-zone-c').innerHTML = svg3C;
+
+          bindSeatClickEvents();
+        })
+        .catch(error => {
+          console.error("좌석배치도 로드 중 오류 발생:", error);
+        });
+
+      // 2. 좌석 클릭 이벤트 리스너 바인딩 (이벤트 위임을 통해 1F/2F/3F 모두 통합 지원)
+      function bindSeatClickEvents() {
+        const mapContainer = document.getElementById('seatmap-map-container');
+        const selectedIdText = document.getElementById('selected-seat-id');
+
+        mapContainer.addEventListener('click', (e) => {
+          const rect = e.target.closest('rect[id^="View_"]');
+          if (!rect) return;
+
+          const viewId = rect.id;
+
+          document.querySelectorAll('svg rect.selected-active').forEach(el => {
+            el.classList.remove('selected-active');
+          });
+          rect.classList.add('selected-active');
+
+          selectedIdText.textContent = viewId;
+          setTimeout(() => {
+            alert(`선택된 좌석 ID: ${viewId}`);
+          }, 50);
+        });
+      }
+
+      // 3. 확대/축소 및 드래그 마우스 이벤트 제어 로직 구현
+      const mapContainer = document.getElementById('seatmap-map-container');
+      const zoomContent = document.getElementById('seatmap-zoom-content');
+      let currentScale = 0.45; // 초기 전체 피팅 스케일 적용
+      let posX = 0;
+      let posY = 0;
+      let isDragging = false;
+      let startX, startY;
+
+      function applyZoomAndPan() {
+        zoomContent.style.transform = `translate(${posX}px, ${posY}px) scale(${currentScale})`;
+      }
+
+      applyZoomAndPan();
+
+      // 마우스 드래그 시작
+      mapContainer.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        isDragging = true;
+        startX = e.clientX - posX;
+        startY = e.clientY - posY;
+        zoomContent.classList.add('dragging');
+        mapContainer.style.cursor = 'move';
+      });
+
+      // 마우스 드래그 중
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        posX = e.clientX - startX;
+        posY = e.clientY - startY;
+        applyZoomAndPan();
+      });
+
+      // 마우스 드래그 종료
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        zoomContent.classList.remove('dragging');
+        mapContainer.style.cursor = 'grab';
+      });
+
+      // 휠 확대/축소 지원 (CSS transform-origin center center 기반 정교 줌 연동)
+      mapContainer.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomIntensity = 0.1;
+        const delta = e.deltaY < 0 ? 1 : -1;
+        currentScale += delta * zoomIntensity * currentScale;
+        currentScale = Math.max(0.1, Math.min(3.0, currentScale));
+        applyZoomAndPan();
+      }, { passive: false });
+
+      // 모바일 터치 드래그 지원
+      mapContainer.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          startX = e.touches[0].clientX - posX;
+          startY = e.touches[0].clientY - posY;
+          zoomContent.classList.add('dragging');
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        posX = e.touches[0].clientX - startX;
+        posY = e.touches[0].clientY - startY;
+        applyZoomAndPan();
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+        zoomContent.classList.remove('dragging');
+      });
+
+      // 줌 컨트롤 버튼 핸들링
+      document.getElementById('seatmap-zoom-in').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (currentScale < 3.0) {
+          currentScale = Math.min(3.0, currentScale + 0.15);
+          applyZoomAndPan();
+        }
+      });
+
+      document.getElementById('seatmap-zoom-out').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (currentScale > 0.1) {
+          currentScale = Math.max(0.1, currentScale - 0.15);
+          applyZoomAndPan();
+        }
+      });
+
+      document.getElementById('seatmap-zoom-reset').addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentScale = 0.45; // 리셋 시 최적화된 초기 스케일 적용
+        posX = 0;
+        posY = 0;
+        applyZoomAndPan();
+      });
+
+      // 4. 층 선택 버튼 (.floor-btn) 클릭 시 층 전환 이벤트 바인딩
+      const floorButtons = document.querySelectorAll('.floor-btn');
+      const floorSections = document.querySelectorAll('.seatmap-img-floor-section');
+
+      floorButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetFloor = btn.getAttribute('data-floor'); // '1F', '2F', '3F'
+
+          // 층 버튼 클래스 활성화 상태 업데이트
+          floorButtons.forEach(fb => fb.classList.remove('active'));
+          btn.classList.add('active');
+
+          // 해당하는 층 배치도 섹션만 active 전환
+          floorSections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === `floor-section-${targetFloor}`) {
+              section.classList.add('active');
+            }
+          });
+
+          // 층 변경 시 줌 및 드래그 위치 정중앙 리셋 (flex-center 정렬)
+          currentScale = targetFloor === '1F' ? 0.45 : 0.6;
+          posX = 0;
+          posY = 0;
+          applyZoomAndPan();
+        });
+      });
+
+      // 5. 구역 선택 버튼 (.section-btn) 클릭 시 해당 층 활성화 및 구역 중앙 포커싱
+      const sectionButtons = document.querySelectorAll('.section-btn');
+
+
+
+      const zoneCoords = {
+        '1F': {
+          'A': { left: 355, top: 442, width: 186, height: 565 },
+          'B': { left: 584, top: 467, width: 258, height: 556 },
+          'C': { left: 886, top: 442, width: 186, height: 565 }
+        },
+        '2F': {
+          'A': { left: 298, top: 452, width: 186, height: 264 },
+          'B': { left: 584, top: 452, width: 258, height: 220 },
+          'C': { left: 948, top: 452, width: 186, height: 264 }
+        },
+        '3F': {
+          'A': { left: 338, top: 382, width: 150, height: 184 },
+          'B': { left: 584, top: 382, width: 258, height: 196 },
+          'C': { left: 908, top: 382, width: 150, height: 184 }
+        }
+      };
+
+      sectionButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetFloor = btn.getAttribute('data-floor'); // '1F', '2F', '3F'
+          const targetZone = btn.getAttribute('data-zone');   // 'A', 'B', 'C'
+
+          // 1) 구역 버튼 active 클래스 활성화 전환
+          sectionButtons.forEach(sb => sb.classList.remove('active'));
+          btn.classList.add('active');
+
+          // 2) 층 버튼 및 층 섹션 동기화 활성화
+          floorButtons.forEach(fb => {
+            fb.classList.remove('active');
+            if (fb.getAttribute('data-floor') === targetFloor) {
+              fb.classList.add('active');
+            }
+          });
+
+          floorSections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === `floor-section-${targetFloor}`) {
+              section.classList.add('active');
+            }
+          });
+
+          // 3) 해당 구역 중앙 줌인-포커싱 수학 연산 및 반영
+          const coords = zoneCoords[targetFloor][targetZone];
+          if (coords) {
+            const containerW = mapContainer.clientWidth;
+            const containerH = mapContainer.clientHeight;
+
+            // 캔버스 본래 크기
+            const canvasW = 1424;
+            const canvasH = targetFloor === '1F' ? 1252 : 930;
+            const localCenterX = canvasW / 2;
+            const localCenterY = canvasH / 2;
+
+            // 구역의 중심점 X, Y
+            const targetX = coords.left + coords.width / 2;
+            const targetY = coords.top + coords.height / 2;
+
+            // 스케일 계산 (구역 크기가 화면의 85%를 차지하도록 피팅)
+            const scaleX = containerW * 0.85 / coords.width;
+            const scaleY = containerH * 0.85 / coords.height;
+            let targetScale = Math.min(scaleX, scaleY);
+            // 줌 스케일 최소 0.5, 최대 1.5 제한
+            targetScale = Math.min(1.5, Math.max(0.5, targetScale));
+
+            // transform-origin: center center 오프셋 공식 적용
+            posX = (localCenterX - targetX) * targetScale;
+            posY = (localCenterY - targetY) * targetScale;
+            currentScale = targetScale;
+
+            applyZoomAndPan();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

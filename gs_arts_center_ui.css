@@ -1,0 +1,2282 @@
+/* CUSTOM UI STYLES */
+body,
+button,
+input,
+select,
+textarea,
+#custom-ui-container,
+.seatmap-popup,
+.floor-btn,
+.section-btn,
+.nav-text,
+.seat-btn,
+#start-banner,
+#service-select-overlay,
+#manual-ui-overlay {
+    font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif !important;
+}
+
+#custom-ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 105;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#custom-ui-container>* {
+    pointer-events: auto;
+}
+
+.custom-ui-top-left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+}
+
+.custom-ui-top-left img {
+    height: 24px;
+    width: auto;
+    display: block;
+}
+
+.custom-ui-top-left .bar {
+    color: #fff;
+    margin-right: 8px;
+}
+
+.custom-ui-top-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Common Button States (White -> Black) */
+.auto-move-header,
+.seat-btn,
+.nav-text,
+.util-btn,
+.nav-arrow {
+    background-color: rgba(255, 255, 255, 0.55);
+    color: #000000;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    cursor: pointer;
+}
+
+.auto-move-header:hover,
+.seat-btn:hover,
+.nav-text:hover,
+.util-btn:hover,
+.nav-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+.auto-move-header:active,
+.seat-btn:active,
+.nav-text:active,
+.util-btn:active,
+.nav-arrow:active {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.auto-move-header.active,
+.seat-btn.active,
+.nav-text.active,
+.util-btn.active,
+.nav-arrow.active {
+    background-color: #ffffff;
+    /* 활성화 */
+    color: #000000;
+}
+
+/* The vertical bar inside buttons */
+.seat-btn::before,
+
+/* Specific element adjustments */
+.auto-move-header {
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auto-move-header .arrow {
+    font-size: 12px;
+    color: inherit;
+}
+
+.seat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+}
+
+.seat-btn {
+    padding: 10px 16px 10px 24px;
+    /* extra left padding for the bar */
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    min-width: 180px;
+    position: relative;
+}
+
+.seat-btn span {
+    font-weight: 900;
+    color: inherit;
+    margin-right: 5px;
+}
+
+.custom-ui-bottom-left {
+    width: 240px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.nav-control {
+    width: 220px;
+    display: flex;
+    align-items: stretch;
+    /* gap: 1px; */
+}
+
+.nav-control .bar {
+    width: 6px;
+    background-color: rgba(255, 255, 255, 0.55);
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+.nav-arrow {
+    padding: 0px;
+    z-index: 1;
+}
+
+.nav-text {
+    padding: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    position: relative;
+    margin: 0 -1px;
+    z-index: 1;
+}
+
+.nav-text:hover,
+.nav-text:active,
+.nav-text.active,
+.nav-arrow:hover,
+.nav-arrow:active,
+.nav-arrow.active {
+    z-index: 2;
+}
+
+.nav-text span {
+    font-weight: 900;
+    color: inherit;
+    margin-right: 5px;
+}
+
+#btn_prev_seat,
+#btn_next_seat {
+    padding: 0px;
+    width: 36px;
+    height: 36px;
+}
+
+#btn_seatmap,
+#btn_stage_change {
+    width: 100%;
+    height: 36px;
+    font-size: 15px;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+#btn_seatmap_select_title {
+    font-size: 15px;
+    font-weight: 700;
+    display: block;
+    padding-top: 5px;
+}
+
+#btn_seatmap_floor {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+#btn_seatmap_text {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* 좌석선택 툴팁 말풍선 스타일 */
+#btn_seatmap {
+    position: relative;
+}
+
+#btn_seatmap.has-selection::after {
+    content: "좌석선택";
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #000000;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+#btn_seatmap.has-selection::before {
+    content: "";
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.85) transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+
+#btn_seatmap.has-selection:hover::after,
+#btn_seatmap.has-selection:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* 무대변경 안내 말풍선 스타일 */
+#btn_stage_change {
+    position: relative;
+}
+
+#btn_stage_change::after {
+    content: attr(data-msg);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #000000;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+#btn_stage_change::before {
+    content: "";
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.85) transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+
+#btn_stage_change.show-msg::after,
+#btn_stage_change.show-msg::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.custom-ui-bottom-right {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    gap: 12px;
+    z-index: 110;
+}
+
+.util-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.util-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+#btn-toggle-ui {
+    background: transparent;
+    width: 22px;
+    border: none;
+}
+
+
+
+/* Individual utility buttons transition */
+.custom-ui-bottom-right .util-btn {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-ui-btn {
+    z-index: 10;
+}
+
+.toggle-ui-btn img {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+/* Custom UI Animation Transitions */
+.custom-ui-top-left {
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.custom-ui-top-left.hide-ani {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.custom-ui-top-right {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.custom-ui-top-right.hide-ani {
+    transform: translateX(100%) translateX(40px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.custom-ui-bottom-left {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.custom-ui-bottom-left.hide-ani {
+    transform: translateX(-100%) translateX(-40px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.custom-ui-bottom-right {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Custom UI Animation Transitions when collapsed (.hide-ani) */
+.custom-ui-bottom-right.hide-ani {
+    transform: translateX(168px) !important;
+}
+
+.custom-ui-bottom-right.hide-ani .home-btn,
+.custom-ui-bottom-right.hide-ani .tutorial-btn,
+.custom-ui-bottom-right.hide-ani .fullscreen-btn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Rotate the X icon by 45 degrees to look like a plus sign (+) when collapsed */
+.custom-ui-bottom-right.hide-ani .toggle-ui-btn img {
+    transform: rotate(180deg) !important;
+}
+
+/* SEAT MAP POPUP STYLES */
+.seatmap-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    pointer-events: none;
+    transition: background-color 0.3s ease;
+    overflow: hidden;
+}
+
+.seatmap-overlay.active {
+    background-color: rgba(0, 0, 0, 0.6);
+    pointer-events: auto;
+}
+
+.seatmap-popup {
+    background-color: #ffffff;
+    width: 85vw;
+    max-width: 1800px;
+    height: 85vh;
+    max-height: 1200px;
+    border-radius: 4px 4px 0 0;
+    /* box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.4); */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 68px 0px 68px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.seatmap-overlay.active .seatmap-popup {
+    transform: translateY(0);
+}
+
+.seatmap-close-btn {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 20px;
+}
+
+.seatmap-close-btn svg {
+    width: 40px;
+    height: 40px;
+    fill: #cccccc;
+    transition: fill 0.2s;
+}
+
+.seatmap-close-btn:hover svg {
+    fill: #666666;
+}
+
+.seatmap-header {
+    background-color: #efefef;
+    color: #000000;
+    text-align: center;
+    padding: 2px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 80px;
+    margin: 28px 0;
+}
+
+.seatmap-header-text {
+    width: 100%;
+    color: #000000;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.seatmap-header-line {
+    width: 11px;
+    height: 80px;
+    background-color: #ffffff;
+    margin-left: 4px;
+}
+
+.seatmap-content {
+    display: flex;
+    flex: 1;
+    gap: 38px;
+    min-height: 0;
+}
+
+.seatmap-floor-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 70px;
+}
+
+.floor-btn {
+    background-color: #ffffff;
+    color: rgba(0, 0, 0, 0.35);
+    border: 0;
+    padding: 4px 6px 4px 0px;
+    font-size: 28px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-right: 6px solid #EFEFEE;
+
+}
+
+.floor-btn:hover {
+    color: rgba(0, 0, 0, 0.65);
+    transform: translateY(-3px);
+}
+
+.floor-btn:active {
+    color: rgba(0, 0, 0);
+    transform: translateY(-1px);
+}
+
+.floor-btn.active {
+    color: #000000;
+}
+
+.seatmap-map-container {
+    flex: 1;
+    /* border: 1px solid #cccccc; */
+    border: 0;
+    background-color: #ffffff;
+    overflow: hidden;
+    position: relative;
+    cursor: move;
+}
+
+.seatmap-map-container:active {
+    cursor: move;
+}
+
+.seatmap-zoom-controls {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+}
+
+.seatmap-zoom-controls button {
+    width: 22px;
+    height: 22px;
+    border-radius: 0;
+    border: none;
+    background-color: transparent;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    box-shadow: none;
+    transition: transform 0.1s;
+    font-size: 0;
+    color: transparent;
+}
+
+.seatmap-zoom-controls button:disabled {
+    opacity: 0.3 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+}
+
+#seatmap-zoom-in {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomin60.png");
+}
+
+#seatmap-zoom-in:hover {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomin100.png");
+    transform: scale(1.05);
+}
+
+#seatmap-zoom-in:active {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomin100.png");
+    transform: scale(1.05);
+}
+
+#seatmap-zoom-out {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomout60.png");
+}
+
+#seatmap-zoom-out:hover {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomout100.png");
+    transform: scale(1.05);
+}
+
+#seatmap-zoom-out:active {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomout100.png");
+    transform: scale(1.05);
+}
+
+#seatmap-zoom-reset {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomre60.png");
+}
+
+#seatmap-zoom-reset:hover {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomre100.png");
+    transform: scale(1.05);
+}
+
+#seatmap-zoom-reset:active {
+    background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomre100.png");
+    transform: scale(1.05);
+}
+
+#seatmap-zoom-content {
+    transform-origin: center center;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+#seatmap-zoom-content.dragging {
+    transition: none !important;
+}
+
+#seatmap-zoom-content img {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.seatmap-section-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 168px;
+    /* border-left: 6px solid #F2F2F2; */
+    padding-left: 10px;
+}
+
+.section-btn {
+    background-color: #ffffff;
+    color: rgba(0, 0, 0, 0.35);
+    border: 0;
+    padding: 2px 0 2px 18px;
+    font-size: 16px;
+    font-weight: normal;
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid #F2F2F2;
+}
+
+.section-btn .section-floor-text {
+    display: inline-flex;
+    height: 38px;
+    font-size: 24px;
+    font-weight: 700;
+    align-items: center;
+}
+
+.section-btn .section-line-text {
+    display: inline-flex;
+    height: 38px;
+    font-size: 16px;
+    font-weight: 700;
+    align-items: center;
+    vertical-align: bottom;
+}
+
+/* 
+.section-btn::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 14px;
+    background-color: currentColor;
+} */
+
+.section-btn:hover {
+    color: rgba(0, 0, 0, 0.65);
+    transform: translateY(-3px);
+}
+
+.section-btn:active,
+.section-btn.active {
+    color: black;
+    transform: translateY(-1px);
+}
+
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .seatmap-popup {
+        width: 96%;
+        height: 96%;
+        padding: 12px;
+    }
+
+    .seatmap-header {
+        font-size: 16px;
+        padding: 5px;
+        margin: 10px 0;
+        height: auto;
+        min-height: 48px;
+    }
+
+    .seatmap-header-text {
+        font-size: 15px;
+    }
+
+    .seatmap-header-line {
+        height: 48px;
+        width: 6px;
+    }
+
+    .seatmap-content {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .seatmap-floor-selector {
+        flex-direction: row;
+        width: 100%;
+        gap: 6px;
+    }
+
+    .floor-btn {
+        padding: 6px 10px;
+        font-size: 14px;
+        font-weight: 700;
+        flex: 1;
+        border-radius: 4px;
+    }
+
+    .seatmap-section-selector {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        border-left: none !important;
+        padding-left: 0 !important;
+        padding-bottom: 6px;
+        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .section-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-radius: 4px;
+    }
+
+    .section-btn span {
+        font-size: 12px !important;
+        margin-right: 3px;
+    }
+
+    .seatmap-map-container {
+        flex: 1;
+        min-height: 250px;
+    }
+
+    .seatmap-zoom-controls button {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+
+/*  ------------   */
+
+:root {
+    --seat-w: 26px;
+    --seat-h: 26px;
+    --gap: 3px;
+    --b-zone-width: 400px;
+}
+
+#seatmap-zoom-content {
+    /* Ensure the zoom container has a nice background and doesn't squish its content */
+    background: #EFEFEE;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.seatmap-img-floor-section {
+    display: none;
+    /* Hide by default */
+    margin-bottom: 60px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 40px;
+    /* Prevent flex shrinking when zooming */
+    flex-shrink: 0;
+    background: #EFEFEE;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.seatmap-img-floor-section.active {
+    display: inline-block;
+    /* Show only when active */
+}
+
+.seatmap-img-floor-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a73e8;
+    margin-bottom: 25px;
+    text-align: center;
+    display: block;
+}
+
+.seatmap-img-theater-layout {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.seatmap-img-zone-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.seatmap-img-zone-box.active-zone {
+    border-color: #1a73e8;
+    background-color: rgba(26, 115, 232, 0.05);
+}
+
+.seatmap-img-zone-label {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 12px;
+    background: #444;
+    color: #fff;
+    padding: 3px 15px;
+    border-radius: 3px;
+}
+
+.seatmap-img-rows-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.seatmap-img-zone-B .seatmap-img-rows-wrap {
+    width: var(--b-zone-width);
+}
+
+.seatmap-img-seat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--gap);
+    height: var(--seat-h);
+}
+
+.seatmap-img-row-num {
+    font-size: 10px;
+    color: #bbb;
+    width: 40px;
+    text-align: right;
+    padding-right: 10px;
+    flex-shrink: 0;
+}
+
+.seatmap-img-seat-btn {
+    height: var(--seat-h);
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin-right: var(--gap);
+    flex-shrink: 0;
+    padding: 0;
+    transition: all 0.2s;
+}
+
+.seatmap-img-seat-btn:last-child {
+    margin-right: 0;
+}
+
+.seatmap-img-seat-btn:hover {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+    z-index: 10;
+}
+
+.seatmap-img-seat-btn:active {
+    transform: scale(0.95);
+}
+
+.seatmap-img-zone-A .seatmap-img-seat-btn,
+.seatmap-img-zone-C .seatmap-img-seat-btn {
+    width: var(--seat-w);
+}
+
+.seatmap-img-zone-B .seatmap-img-seat-btn {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.seatmap-img-seat-btn.seatmap-img-none {
+    visibility: hidden;
+    pointer-events: none;
+    border: none;
+}
+
+.seatmap-img-has-extra .seatmap-img-seat-btn.seatmap-img-none {
+    display: none;
+}
+
+.seatmap-img-seat-btn.seatmap-img-disability {
+    background-color: #fff9c4;
+    border-color: #fbc02d;
+    color: #f57f17;
+    font-weight: bold;
+}
+
+.seatmap-img-seat-btn.seatmap-img-extra-27 {
+    background-color: #ffebee;
+    border-color: #ef9a9a;
+    font-weight: bold;
+}
+
+.seatmap-img-seat-btn.seatmap-img-extra-17 {
+    background-color: #e3f2fd;
+    border-color: #90caf9;
+    font-weight: bold;
+}
+
+.seatmap-img-seat-btn.selected {
+    border: 3px solid #000000 !important;
+    z-index: 15;
+}
+
+#primary-progress {
+    width: 90vw;
+    transform: scale(2.1);
+    margin: 0;
+    margin-top: 100px;
+}
+
+#primary-progress-bg {
+    stroke: #FFFFFF;
+}
+
+#primary-progress-done {
+    stroke: #000000;
+}
+
+#start-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 190;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    transition: opacity 0.5s ease-in-out;
+    font-family: 'Manrope', sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+#start-banner .banner-inner {
+    /* border: 1px solid #dadada; */
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    box-sizing: border-box;
+    animation: bannerFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#start-banner-logo {
+    width: 100%;
+    max-width: 650px;
+    object-fit: contain;
+    margin-bottom: 260px;
+    transition: transform 0.1s ease-out;
+}
+
+@keyframes bannerFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    #start-banner .banner-inner {
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
+    }
+
+    #start-banner-logo {
+        max-width: 400px;
+        margin-bottom: 80px;
+    }
+}
+
+
+#manual-ui-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 990;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    /* background-color: #ffffffab; */
+    /* backdrop-filter: blur(10px); */
+    font-family: 'Manrope', sans-serif;
+    padding: 0;
+    box-sizing: border-box;
+    /* animation: overlayFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; */
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+#manual-ui-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+}
+
+.manual-ui-card {
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    /* top: 100px;
+    right: 80px;
+    bottom: 100px;
+    left: 80px; */
+    /* padding: 40px; */
+}
+
+.manual-ui-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 78vw;
+    box-sizing: border-box;
+}
+
+.manual-ui-body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.manual-ui-body img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+#btn_help_hide {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+#btn_help_hide img {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+#btn_help_hide:hover {
+    transform: scale(1.1);
+}
+
+#btn_help_hide:active {
+    transform: scale(0.95);
+}
+
+
+
+#service-select-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background: transparent; */
+    background-color: #ffffff;
+    /* backdrop-filter: blur(10px); */
+    font-family: 'Manrope', sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+    /* animation: overlayFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; */
+    transition: opacity 0.55s ease, visibility 0.55s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+#service-select-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.service-select-card {
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    box-sizing: border-box;
+    background: transparent;
+    padding: 40px;
+}
+
+.service-select-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: min(1590px, calc(45vh * 3.245));
+    box-sizing: border-box;
+}
+
+.service-select-body {
+    margin-bottom: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(0, 0, 0, 0.5);
+}
+
+.tutorial-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+}
+
+.service-select-footer {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.ssp-card-btn {
+    flex: 1;
+    background: rgb(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 0;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    color: #ffffff;
+    outline: none;
+    font-family: inherit;
+}
+
+.ssp-card-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: #ffffff;
+    transform: translateY(-6px);
+}
+
+.ssp-card-btn:active {
+    background: rgb(0, 0, 0);
+    transform: translateY(-2px);
+}
+
+.ssp-card-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ssp-card-desc-container {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+}
+
+.ssp-card-line {
+    width: 6px;
+    background-color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.ssp-card-desc {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive Overrides */
+@media (max-width: 1200px) {
+    .ssp-card-btn {
+        padding: 24px 30px;
+    }
+
+    .ssp-card-title {
+        font-size: 20px;
+        margin-bottom: 14px;
+    }
+
+    .ssp-card-desc {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .service-select-card {
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
+        padding: 20px 15px;
+    }
+
+    .service-select-inner {
+        max-width: min(100%, calc(35vh * 3.245));
+    }
+
+    .service-select-footer {
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .ssp-card-btn {
+        padding: 20px 24px;
+    }
+
+    .ssp-card-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .ssp-card-desc {
+        font-size: 12px;
+    }
+
+    .manual-ui-card {
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
+        padding: 20px 15px;
+    }
+
+    .manual-ui-inner {
+        max-width: min(100%, calc(35vh * 3.245));
+    }
+
+    #btn_help_hide {
+        top: -45px;
+    }
+
+    #btn_help_hide img {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* STAGE & OP Box outlines for 1F */
+.seatmap-img-stage-box {
+    width: 88%;
+    height: 78px;
+    border: 2px solid #bcc600;
+    border-radius: 4px;
+    margin: 2px auto 22px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    color: #111111;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+    user-select: none;
+}
+
+.seatmap-img-op-box {
+    width: 58%;
+    height: 52px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: #333333;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    background-color: #fff;
+    user-select: none;
+}
+
+/* 극장 1층 배치도 컨테이너 크기 고정 (wrapper 제거 대응, 종횡비 찌그러짐 방지) */
+.seatmap-img-floor-section {
+    position: relative !important;
+    width: 1424px !important;
+    height: 1252px !important;
+    margin: 0 auto !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border: none !important;
+    display: none !important;
+}
+
+.seatmap-img-floor-section.active {
+    display: block !important;
+}
+
+/* 전체 극장 배경 레이아웃 (비율 완전 보장) */
+.seatmap-bg {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+/* 구역 경계 라인 이미지 레이어 (배경과 1:1 중첩) */
+#seatmap_1f_line_op {
+    display: none;
+    position: absolute;
+    top: 316px;
+    left: 395px;
+    width: 630px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_1f_line_a {
+    display: none;
+    position: absolute;
+    top: 428px;
+    left: 339px;
+    width: 214px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_1f_line_b {
+    display: none;
+    position: absolute;
+    top: 452px;
+    left: 568px;
+    width: 288px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_1f_line_c {
+    display: none;
+    position: absolute;
+    top: 428px;
+    left: 874px;
+    width: 214px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_2f_line_a {
+    display: none;
+    position: absolute;
+    top: 426px;
+    left: 339px;
+    width: 214px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_2f_line_b {
+    display: none;
+    position: absolute;
+    top: 446px;
+    left: 569px;
+    width: 288px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_2f_line_c {
+    display: none;
+    position: absolute;
+    top: 426px;
+    left: 870px;
+    width: 214px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_3f_line_a {
+    display: none;
+    position: absolute;
+    top: 422px;
+    left: 374px;
+    width: 178px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_3f_line_b {
+    display: none;
+    position: absolute;
+    top: 446px;
+    left: 568px;
+    width: 288px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#seatmap_3f_line_c {
+    display: none;
+    position: absolute;
+    top: 422px;
+    left: 872px;
+    width: 178px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 3개 구역 SVG들이 absolute로 배치될 영역 */
+.svg-container {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 2 !important;
+}
+
+/* 각 구역별 정교한 absolute 백분율 위치 셋팅 (배경 크기 비례 대응) */
+.zone-overlay {
+    position: absolute !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+#floor1f-zone-op {
+    left: 430px !important;
+    top: 328px !important;
+    width: 565px !important;
+    height: 88px !important;
+}
+
+#floor1f-zone-a {
+    left: 355px !important;
+    top: 442px !important;
+    width: 186px !important;
+    height: 565px !important;
+}
+
+#floor1f-zone-b {
+    left: 584px !important;
+    top: 467px !important;
+    width: 258px !important;
+    height: 556px !important;
+}
+
+#floor1f-zone-c {
+    left: 886px !important;
+    top: 442px !important;
+    width: 186px !important;
+    height: 565px !important;
+}
+
+/* 2층 극장 배치도 고정 크기 및 구역 PX 보정 */
+#floor-section-2F {
+    width: 1424px !important;
+    height: 930px !important;
+}
+
+#floor2f-zone-a {
+    left: 355px !important;
+    top: 442px !important;
+    width: 186px !important;
+    height: 264px !important;
+}
+
+#floor2f-zone-b {
+    left: 585px !important;
+    top: 462px !important;
+    width: 258px !important;
+    height: 220px !important;
+}
+
+#floor2f-zone-c {
+    left: 882px !important;
+    top: 442px !important;
+    width: 186px !important;
+    height: 264px !important;
+}
+
+/* 3층 극장 배치도 고정 크기 및 구역 PX 보정 */
+#floor-section-3F {
+    width: 1424px !important;
+    height: 930px !important;
+}
+
+#floor3f-zone-a {
+    left: 390px !important;
+    top: 438px !important;
+    width: 150px !important;
+    height: 184px !important;
+}
+
+#floor3f-zone-b {
+    left: 584px !important;
+    top: 462px !important;
+    width: 258px !important;
+    height: 220px !important;
+}
+
+#floor3f-zone-c {
+    left: 884px !important;
+    top: 438px !important;
+    width: 150px !important;
+    height: 184px !important;
+}
+
+.zone-overlay svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+}
+
+/* SVG 내부 좌석 스타일 */
+svg {
+    cursor: grab !important;
+}
+
+svg rect[id^="View_"] {
+    fill: #ffffff !important;
+    cursor: pointer !important;
+    pointer-events: all !important;
+    transition: all 0.15s ease !important;
+}
+
+/* 호버 시 */
+svg rect[id^="View_"]:hover {
+    fill: #aaaaaa !important;
+}
+
+/* 선택된 좌석 상태 스타일 */
+svg rect[id^="View_"].selected-active {
+    fill: #61dd80 !important;
+}
+
+/* 줌 컨텐츠의 기준점을 명시적으로 정중앙으로 강제 지정 */
+#seatmap-zoom-content {
+    transform-origin: center center !important;
+}
+
+/* 마우스 드래그 및 텍스트 선택 시 커서 튐 현상 방지 */
+#seatmap-zoom-content,
+#seatmap-zoom-content * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -webkit-user-drag: none !important;
+}
+
+#tour-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 32px;
+    text-align: center;
+    line-height: 28px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+    background-color: rgba(255, 255, 255, 0.55);
+    /* backdrop-filter: blur(5px); */
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 0 6px 0;
+    transition: all 0.3s ease;
+}
+
+#tour-button:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+#tour-button:active {
+    background-color: rgba(255, 255, 255);
+}
+
+.auto-run-ani {
+    margin-left: 14px;
+    width: 12px;
+    height: 16px;
+    display: block;
+}
+
+.auto-pause-ani {
+    margin-left: 14px;
+    width: 16px;
+    height: 16px;
+    display: none;
+}
+
+.tour-on {
+    animation: none;
+}
+
+.tour-on .auto-run-ani {
+    display: none;
+}
+
+.tour-on .auto-pause-ani {
+    display: block;
+    animation: blinker 1s linear infinite;
+}
+
+#view-list-items {
+    padding-left: 6px;
+    border-left: 6px solid rgba(255, 255, 255, 0.5);
+    display: grid;
+    gap: 4px;
+    /* overflow: hidden; */
+}
+
+.ui-panel {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#view-list-items .ui-panel {
+    padding-left: 6px;
+    width: 130px;
+    height: 26px;
+    margin: 0;
+    line-height: 20px;
+    vertical-align: middle;
+    text-align: left;
+}
+
+#view-list-folder {
+    display: none;
+    opacity: 0;
+}
+
+
+.ui-hoverable:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 
+view ui-hoverable ui-panel next-active-view
+view ui-hoverable ui-panel active-view
+ */
+
+.active-view,
+.active-view:hover {
+    background-color: rgba(255, 255, 255, 0.99);
+}
+
+.next-active-view,
+.next-active-view:hover {
+    background-color: rgba(255, 255, 255, 0.90);
+    animation: blink 1.25s linear infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+#menu-bar {
+    right: 0px;
+    bottom: 10px;
+}
+
+#menu-bar-content {
+    height: 42px;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#menu-bar-folder>img {
+    width: 12px;
+    transition: transform .5s ease-in-out;
+    height: 38px;
+    padding: 5px 0 0 0;
+    margin: 0;
+}
+
+#menu-bar-folder {
+    width: 16px;
+    height: 42px;
+    min-width: 12px;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.menu-item>img {
+    padding: 0;
+}
+
+.menu-item {
+    margin-left: -4px;
+}
+
+#home-button,
+#help2-button,
+#fullscreen-button {
+    width: 44px;
+    min-width: 42px;
+    height: 42px;
+    margin-left: -4px;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* FMP Navigation Buttons State Styling */
+#home-button,
+#help2-button,
+#fullscreen-button,
+#btn_prev_seat,
+#btn_next_seat {
+    background-color: rgba(255, 255, 255, 0.55) !important;
+    border: none !important;
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: background-image 0.15s ease, background-color 0.15s ease;
+}
+
+#home-button,
+#help2-button,
+#fullscreen-button {
+    background-size: 24px 24px !important;
+}
+
+#btn_prev_seat,
+#btn_next_seat {
+    background-size: 24px 24px !important;
+}
+
+#home-button:hover,
+#help2-button:hover,
+#fullscreen-button:hover,
+#btn_prev_seat:hover,
+#btn_next_seat:hover {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+#home-button:active,
+#help2-button:active,
+#fullscreen-button:active,
+#btn_prev_seat:active,
+#btn_next_seat:active {
+    background-color: #ffffff !important;
+}
+
+/* Home Button: 30(Normal), 60(Hover), 100(Active) */
+#home-button {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_home60.png') !important;
+}
+
+#home-button:hover {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_home100.png') !important;
+}
+
+#home-button:active {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_home100.png') !important;
+}
+
+/* Tutorial Button: 30(Normal), 60(Hover), 100(Active) */
+#help2-button {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_tutorial60.png') !important;
+}
+
+#help2-button:hover {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_tutorial100.png') !important;
+}
+
+#help2-button:active {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_tutorial100.png') !important;
+}
+
+/* Screen Button: 30(Normal), 60(Hover), 100(Active) */
+#fullscreen-button {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_screen60.png') !important;
+}
+
+#fullscreen-button:hover {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_screen100.png') !important;
+}
+
+#fullscreen-button:active {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_screen100.png') !important;
+}
+
+/* Prev Seat Button: 30(Normal), 60(Hover), 100(Active) */
+#btn_prev_seat {
+    margin-right: 1px;
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movL60.png') !important;
+}
+
+#btn_prev_seat:hover {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movL100.png') !important;
+}
+
+#btn_prev_seat:active {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movL100.png') !important;
+}
+
+/* Next Seat Button: 30(Normal), 60(Hover), 100(Active) */
+#btn_next_seat {
+    margin-left: 1px;
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movR60.png') !important;
+}
+
+#btn_next_seat:hover {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movR100.png') !important;
+}
+
+#btn_next_seat:active {
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movR100.png') !important;
+}
+
+
+/* 극장 1층 배치도 컨테이너 크기 고정 (wrapper 제거 대응, 종횡비 찌그러짐 방지) */
+.seatmap-img-floor-section {
+    position: relative;
+    width: 1424px;
+    height: 1252px;
+    margin: 0 auto;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border: none !important;
+    display: none;
+}
+
+.seatmap-img-floor-section.active {
+    display: block !important;
+}
+
+/* 전체 극장 배경 레이아웃 (비율 완전 보장) */
+.seatmap-bg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 3개 구역 SVG들이 absolute로 배치될 영역 */
+.svg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+/* 각 구역별 정교한 absolute 백분율 위치 셋팅 (배경 크기 비례 대응) */
+.zone-overlay {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#floor1f-zone-a {
+    left: 355px;
+    top: 442px;
+    width: 186px;
+    height: 565px;
+}
+
+#floor1f-zone-b {
+    left: 584px;
+    top: 467px;
+    width: 258px;
+    height: 556px;
+}
+
+#floor1f-zone-c {
+    left: 886px;
+    top: 442px;
+    width: 186px;
+    height: 565px;
+}
+
+/* 2층 극장 배치도 고정 크기 및 구역 PX 보정 */
+#floor-section-2F {
+    width: 1424px;
+    height: 930px;
+}
+
+#floor2f-zone-a {
+    left: 355px;
+    top: 442px;
+    width: 186px;
+    height: 264px;
+}
+
+#floor2f-zone-b {
+    left: 585px;
+    top: 462px;
+    width: 258px;
+    height: 220px;
+}
+
+#floor2f-zone-c {
+    left: 882px;
+    top: 442px;
+    width: 186px;
+    height: 264px;
+}
+
+/* 3층 극장 배치도 고정 크기 및 구역 PX 보정 */
+#floor-section-3F {
+    width: 1424px;
+    height: 930px;
+}
+
+#floor3f-zone-a {
+    left: 390px;
+    top: 438px;
+    width: 150px;
+    height: 184px;
+}
+
+#floor3f-zone-b {
+    left: 584px;
+    top: 462px;
+    width: 258px;
+    height: 220px;
+}
+
+#floor3f-zone-c {
+    left: 884px;
+    top: 438px;
+    width: 150px;
+    height: 184px;
+}
+
+.zone-overlay svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+svg {
+    cursor: grab !important;
+}
+
+svg rect[id^="View_"] {
+    fill: #ffffff !important;
+    cursor: pointer !important;
+    pointer-events: all !important;
+    transition: all 0.15s ease;
+}
+
+/* 호버 시 회색 배경 */
+svg rect[id^="View_"]:hover {
+    fill: #aaaaaa !important;
+}
+
+/* 선택된 좌석 상태 스타일 (연한 초록색 배경) */
+svg rect[id^="View_"].selected-active {
+    fill: #61dd80 !important;
+}
+
+/* 줌 컨텐츠의 기준점을 명시적으로 정중앙으로 강제 지정 */
+#seatmap-zoom-content {
+    transform-origin: center center !important;
+}
+
+
+/* 극장 1층 배치도 컨테이너 크기 고정 (wrapper 제거 대응, 종횡비 찌그러짐 방지) */
+.seatmap-img-floor-section {
+    position: relative;
+    width: 1424px;
+    height: 1252px;
+    margin: 0 auto;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border: none !important;
+    display: none;
+}
+
+.seatmap-img-floor-section.active {
+    display: block !important;
+}
+
+/* 전체 극장 배경 레이아웃 (비율 완전 보장) */
+.seatmap-bg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 3개 구역 SVG들이 absolute로 배치될 영역 */
+.svg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+/* 각 구역별 정교한 absolute 백분율 위치 셋팅 (배경 크기 비례 대응) */
+.zone-overlay {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#floor1f-zone-a {
+    left: 355px;
+    top: 442px;
+    width: 186px;
+    height: 565px;
+}
+
+#floor1f-zone-b {
+    left: 584px;
+    top: 467px;
+    width: 258px;
+    height: 556px;
+}
+
+#floor1f-zone-c {
+    left: 886px;
+    top: 442px;
+    width: 186px;
+    height: 565px;
+}
+
+/* 2층 극장 배치도 고정 크기 및 구역 PX 보정 */
+#floor-section-2F {
+    width: 1424px;
+    height: 930px;
+}
+
+#floor2f-zone-a {
+    left: 355px;
+    top: 442px;
+    width: 186px;
+    height: 264px;
+}
+
+#floor2f-zone-b {
+    left: 585px;
+    top: 462px;
+    width: 258px;
+    height: 220px;
+}
+
+#floor2f-zone-c {
+    left: 882px;
+    top: 442px;
+    width: 186px;
+    height: 264px;
+}
+
+/* 3층 극장 배치도 고정 크기 및 구역 PX 보정 */
+#floor-section-3F {
+    width: 1424px;
+    height: 930px;
+}
+
+#floor3f-zone-a {
+    left: 390px;
+    top: 438px;
+    width: 150px;
+    height: 184px;
+}
+
+#floor3f-zone-b {
+    left: 584px;
+    top: 462px;
+    width: 258px;
+    height: 220px;
+}
+
+#floor3f-zone-c {
+    left: 884px;
+    top: 438px;
+    width: 150px;
+    height: 184px;
+}
+
+.zone-overlay svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+svg {
+    cursor: grab !important;
+}
+
+svg rect[id^="View_"] {
+    fill: #ffffff !important;
+    cursor: pointer !important;
+    pointer-events: all !important;
+    transition: all 0.15s ease;
+}
+
+/* 호버 시 회색 배경 */
+svg rect[id^="View_"]:hover {
+    fill: #aaaaaa !important;
+}
+
+/* 선택된 좌석 상태 스타일 (연한 초록색 배경) */
+svg rect[id^="View_"].selected-active {
+    fill: #61dd80 !important;
+}
+
+/* 줌 컨텐츠의 기준점을 명시적으로 정중앙으로 강제 지정 */
+#seatmap-zoom-content {
+    transform-origin: center center !important;
+}
