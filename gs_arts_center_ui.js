@@ -97,59 +97,7 @@ function showUI01() {
   }, 1550);
 };
 
-function showViewId(viewId) {
-  currentSeatViewId = viewId;
 
-  // Highlight selected seat on map
-  document.querySelectorAll('svg rect.selected-active').forEach(el => {
-    el.classList.remove('selected-active');
-  });
-  const rect = document.getElementById(viewId);
-  if (rect) {
-    rect.classList.add('selected-active');
-  }
-  const seat = GS_ARTS_CENTER_SEAT_MAP_DATA.find(s => s.View_ID === viewId);
-  if (seat) {
-    const floorText = seat.Floor.replace('F', '층');
-    const displayText = ` ${seat.Zone}블록 ${seat.Row} ${seat.Seat_Number}좌석`;
-    const btn_seatmap_floor = document.getElementById('btn_seatmap_floor');
-    const btn_seatmap_text = document.getElementById('btn_seatmap_text');
-    const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
-    btn_seatmap_select_title.style.display = 'none';
-    btn_seatmap_floor.innerText = floorText;
-    btn_seatmap_text.innerText = displayText;
-    btn_seatmap_select_title.style.display = 'none';
-
-    const btn_seatmap = document.getElementById('btn_seatmap');
-    if (btn_seatmap) btn_seatmap.classList.add('has-selection');
-
-    // move 3D 
-    const view = new WALK.View();
-    view.position.x = seat.X;
-    view.position.y = seat.Y;
-    view.position.z = seat.Z;
-
-    const m = new THREE.Matrix4();
-    m.lookAt(view.position, vec_LookAt, new THREE.Vector3(0, 0, 1));
-    let ves = new THREE.Euler();
-    ves.setFromRotationMatrix(m, 'ZYX');
-
-    view.rotation.z = ves.z;
-    isNavigating = true;
-    viewer.switchToView(view);
-    setTimeout(() => {
-      isNavigating = false;
-    }, 1200);
-
-    // Close the popup
-    const seatmapOverlay = document.getElementById('seatmap-overlay');
-    if (seatmapOverlay) {
-      seatmapOverlay.classList.remove('active');
-    }
-    showCustomUI();
-    viewer.menuVisible = true;
-  }
-}
 
 function reset_btn_seatmap() {
   currentSeatViewId = null;
@@ -221,11 +169,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function btnSeatmapClose() {
+    const seatmapOverlay = document.getElementById('seatmap-overlay');
+    if (seatmapOverlay) seatmapOverlay.classList.remove('active');
+
+    // 라인 이미지 및 구역 선택 상태 모두 초기화
+    hideAllZoneLines();
+    sectionButtons.forEach(sb => sb.classList.remove('active'));
+    reset_btn_seatmap();
+  }
+
+  function showViewId(viewId) {
+    currentSeatViewId = viewId;
+
+    // Highlight selected seat on map
+    document.querySelectorAll('svg rect.selected-active').forEach(el => {
+      el.classList.remove('selected-active');
+    });
+    const rect = document.getElementById(viewId);
+    if (rect) {
+      rect.classList.add('selected-active');
+    }
+    const seat = GS_ARTS_CENTER_SEAT_MAP_DATA.find(s => s.View_ID === viewId);
+    if (seat) {
+      const floorText = seat.Floor.replace('F', '층');
+      const displayText = ` ${seat.Zone}블록 ${seat.Row} ${seat.Seat_Number}좌석`;
+      const btn_seatmap_floor = document.getElementById('btn_seatmap_floor');
+      const btn_seatmap_text = document.getElementById('btn_seatmap_text');
+      const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
+      btn_seatmap_select_title.style.display = 'none';
+      btn_seatmap_floor.innerText = floorText;
+      btn_seatmap_text.innerText = displayText;
+      btn_seatmap_select_title.style.display = 'none';
+
+      const btn_seatmap = document.getElementById('btn_seatmap');
+      if (btn_seatmap) btn_seatmap.classList.add('has-selection');
+
+      // move 3D 
+      const view = new WALK.View();
+      view.position.x = seat.X;
+      view.position.y = seat.Y;
+      view.position.z = seat.Z;
+
+      const m = new THREE.Matrix4();
+      m.lookAt(view.position, vec_LookAt, new THREE.Vector3(0, 0, 1));
+      let ves = new THREE.Euler();
+      ves.setFromRotationMatrix(m, 'ZYX');
+
+      view.rotation.z = ves.z;
+      isNavigating = true;
+      viewer.switchToView(view);
+      setTimeout(() => {
+        isNavigating = false;
+      }, 1200);
+
+      // Close the popup
+      const seatmapOverlay = document.getElementById('seatmap-overlay');
+      if (seatmapOverlay) seatmapOverlay.classList.remove('active');
+
+      // 라인 이미지 및 구역 선택 상태 모두 초기화
+      hideAllZoneLines();
+      sectionButtons.forEach(sb => sb.classList.remove('active'));
+
+      showCustomUI();
+      viewer.menuVisible = true;
+    }
+  }
+
   const btnSeatmap = document.getElementById('btn_seatmap');
   const seatmapOverlay = document.getElementById('seatmap-overlay');
-  const closeBtn = document.querySelector('.seatmap-close-btn');
+  const seatmapCloseButton = document.getElementById('seatmap-close-button');
 
-  if (btnSeatmap && seatmapOverlay && closeBtn) {
+  if (btnSeatmap && seatmapOverlay && seatmapCloseButton) {
+    seatmapCloseButton.addEventListener('click', () => {
+      btnSeatmapClose();
+    });
+
     btnSeatmap.addEventListener('click', () => {
       seatmapOverlay.classList.add('active');
       reset_btn_seatmap();
@@ -233,16 +252,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (window.setZoomLevel) window.setZoomLevel(0, true);
     });
 
-    closeBtn.addEventListener('click', () => {
-      seatmapOverlay.classList.remove('active');
-      reset_btn_seatmap();
-    });
-
     // Close when clicking outside the popup
     seatmapOverlay.addEventListener('click', (e) => {
       if (e.target === seatmapOverlay) {
-        seatmapOverlay.classList.remove('active');
-        reset_btn_seatmap();
+        //seatmapOverlay.classList.remove('active');
+        //reset_btn_seatmap();
+        btnSeatmapClose();
       }
     });
   }
@@ -633,7 +648,23 @@ document.addEventListener('DOMContentLoaded', () => {
       reset_btn_seatmap();
     }
   }, true);
+
+
+
+  window.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      // const seatmapOverlay = document.getElementById('seatmap-overlay');
+      // if (seatmapOverlay) seatmapOverlay.classList.remove('active');
+      // reset_btn_seatmap();
+      btnSeatmapClose();
+    }
+  });
+
 });
+
+
+//------------------------------------------
+
 
 window.toggleFullScreen = function () {
   if (!document.fullscreenElement) {
@@ -644,7 +675,6 @@ window.toggleFullScreen = function () {
     document.exitFullscreen();
   }
 };
-
 
 function toogle_menu_bar() {
   if (viewer.menuVisible) {
@@ -710,7 +740,7 @@ const nodeNames = ['curtain_1:그룹#141', 'curtain_2:그룹#28', 'curtian_3:그
 
 function btn_stage_change() {
   // 무대장치 onoff 시 좌석해제
-  reset_btn_seatmap();
+  //reset_btn_seatmap();
 
   if (stage_change_step == 0) {
     nodeNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
@@ -770,12 +800,5 @@ document.getElementById('btn_next_seat').addEventListener('click', () => {
     isNavigating = true;
     showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[nextIndex].View_ID);
     setTimeout(() => { isNavigating = false; }, 1000);
-  }
-});
-
-
-window.addEventListener('keydown', function (event) {
-  if (event.key === 'Escape') {
-    reset_btn_seatmap();
   }
 });
