@@ -650,6 +650,39 @@ document.addEventListener('DOMContentLoaded', () => {
   }, true);
 
 
+  document.getElementById('btn_prev_seat').addEventListener('click', () => {
+    if (isNavigating || !currentSeatViewId) return;
+    const index = GS_ARTS_CENTER_SEAT_MAP_DATA.findIndex(s => s.View_ID === currentSeatViewId);
+
+    let prevIndex = index - 1;
+    while (prevIndex >= 0 && GS_ARTS_CENTER_SEAT_MAP_DATA[prevIndex].Seat_Type === "none") {
+      prevIndex--;
+    }
+
+    if (prevIndex >= 0) {
+      isNavigating = true;
+      showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[prevIndex].View_ID);
+      setTimeout(() => { isNavigating = false; }, 1000);
+    }
+  });
+
+  document.getElementById('btn_next_seat').addEventListener('click', () => {
+    if (isNavigating || !currentSeatViewId) return;
+    const index = GS_ARTS_CENTER_SEAT_MAP_DATA.findIndex(s => s.View_ID === currentSeatViewId);
+
+    let nextIndex = index + 1;
+    while (nextIndex < GS_ARTS_CENTER_SEAT_MAP_DATA.length && GS_ARTS_CENTER_SEAT_MAP_DATA[nextIndex].Seat_Type === "none") {
+      nextIndex++;
+    }
+
+    if (nextIndex < GS_ARTS_CENTER_SEAT_MAP_DATA.length) {
+      isNavigating = true;
+      showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[nextIndex].View_ID);
+      setTimeout(() => { isNavigating = false; }, 1000);
+    }
+  });
+
+
 
   window.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
@@ -659,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btnSeatmapClose();
     }
   });
+
 
 });
 
@@ -682,6 +716,7 @@ function toogle_menu_bar() {
   } else {
     showCustomUI();
   }
+  reset_btn_seatmap();
 }
 
 window.hideCustomUI = function () {
@@ -711,6 +746,7 @@ function btn_menu_show() {
   if (viewer._autoTour.isRunning() == true) {
     viewer._autoTour.stop();
   }
+  reset_btn_seatmap();
 }
 
 function btn_help_show() {
@@ -770,35 +806,3 @@ function btn_stage_change() {
     }, 2000);
   }
 };
-
-document.getElementById('btn_prev_seat').addEventListener('click', () => {
-  if (isNavigating || !currentSeatViewId) return;
-  const index = GS_ARTS_CENTER_SEAT_MAP_DATA.findIndex(s => s.View_ID === currentSeatViewId);
-
-  let prevIndex = index - 1;
-  while (prevIndex >= 0 && GS_ARTS_CENTER_SEAT_MAP_DATA[prevIndex].Seat_Type === "none") {
-    prevIndex--;
-  }
-
-  if (prevIndex >= 0) {
-    isNavigating = true;
-    showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[prevIndex].View_ID);
-    setTimeout(() => { isNavigating = false; }, 1000);
-  }
-});
-
-document.getElementById('btn_next_seat').addEventListener('click', () => {
-  if (isNavigating || !currentSeatViewId) return;
-  const index = GS_ARTS_CENTER_SEAT_MAP_DATA.findIndex(s => s.View_ID === currentSeatViewId);
-
-  let nextIndex = index + 1;
-  while (nextIndex < GS_ARTS_CENTER_SEAT_MAP_DATA.length && GS_ARTS_CENTER_SEAT_MAP_DATA[nextIndex].Seat_Type === "none") {
-    nextIndex++;
-  }
-
-  if (nextIndex < GS_ARTS_CENTER_SEAT_MAP_DATA.length) {
-    isNavigating = true;
-    showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[nextIndex].View_ID);
-    setTimeout(() => { isNavigating = false; }, 1000);
-  }
-});
