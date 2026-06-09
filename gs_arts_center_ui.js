@@ -239,8 +239,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSeatmap = document.getElementById('btn_seatmap');
   const seatmapOverlay = document.getElementById('seatmap-overlay');
   const seatmapCloseButton = document.getElementById('seatmap-close-button');
+  const btn_menu_bar_folder = document.getElementById('menu-bar-folder');
 
-  if (btnSeatmap && seatmapOverlay && seatmapCloseButton) {
+  if (btnSeatmap && seatmapOverlay && seatmapCloseButton && btn_menu_bar_folder) {
+
+    btn_menu_bar_folder.addEventListener('click', () => {
+      toogle_menu_bar();
+    });
+
     seatmapCloseButton.addEventListener('click', () => {
       btnSeatmapClose();
     });
@@ -710,13 +716,14 @@ window.toggleFullScreen = function () {
   }
 };
 
+
+
 function toogle_menu_bar() {
   if (viewer.menuVisible) {
     hideCustomUI();
   } else {
     showCustomUI();
   }
-  reset_btn_seatmap();
 }
 
 window.hideCustomUI = function () {
