@@ -3,9 +3,7 @@ const vec_LookAt = new THREE.Vector3(18.22, 12.4, 4.5);
 var viewer = WALK.getViewer();
 viewer.onSceneReadyToDisplay(showUI01);
 viewer.play();
-
 viewer.anchorsVisible = false;
-
 viewer.onViewSwitchStarted(() => {
   if (!isNavigating) {
     reset_btn_seatmap();
@@ -14,29 +12,8 @@ viewer.onViewSwitchStarted(() => {
 
 viewer.menuVisible = true;
 viewer.helpVisible = false;
-
 let currentSeatViewId = null;
 let isNavigating = false;
-
-
-
-
-function test001() {
-  viewer.onNodeTypeClicked(function (node, position, distance) {
-    var nodeTypePath = [];
-    while (node) {
-      nodeTypePath.push(node.type);
-      node = node.parent;
-    }
-    viewer.openPopup(
-      '<div style="font-size: 1.5em">' +
-      '  Clicked nodes: ' + nodeTypePath.join(' > ') + '<br/>' +
-      '  Click distance: ' + distance.toFixed(2) + ' m' +
-      '</div>'
-    )
-    return true;
-  });
-}
 
 function showUI01() {
   const banner = document.getElementById('start-banner');
@@ -99,6 +76,27 @@ function showUI01() {
 
 
 
+function reset_seatmap() {
+  currentSeatViewId = null;
+
+  const btn_seatmap_floor = document.getElementById('btn_seatmap_floor');
+  const btn_seatmap_text = document.getElementById('btn_seatmap_text');
+  btn_seatmap_floor.innerText = '';
+  btn_seatmap_text.innerText = '';
+  const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
+  btn_seatmap_select_title.style.display = 'block';
+
+  const btn_seatmap = document.getElementById('btn_seatmap');
+  if (btn_seatmap) btn_seatmap.classList.remove('has-selection');
+}
+
+function reset_seatmap2() {
+  reset_seatmap();
+  document.querySelectorAll('svg rect.selected-active').forEach(el => {
+    el.classList.remove('selected-active');
+  });
+}
+
 function reset_btn_seatmap() {
   currentSeatViewId = null;
 
@@ -114,6 +112,10 @@ function reset_btn_seatmap() {
 
   showCustomUI();
   viewer.menuVisible = true;
+}
+
+function btn_autotour() {
+  reset_seatmap2();
 }
 
 
@@ -193,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const seat = GS_ARTS_CENTER_SEAT_MAP_DATA.find(s => s.View_ID === viewId);
     if (seat) {
       const floorText = seat.Floor.replace('F', '층');
-      const displayText = ` ${seat.Zone}블록 ${seat.Row} ${seat.Seat_Number}좌석`;
+      const displayText = ` ${seat.Zone}블록 ${seat.Row} ${seat.Display_Text}좌석`;
       const btn_seatmap_floor = document.getElementById('btn_seatmap_floor');
       const btn_seatmap_text = document.getElementById('btn_seatmap_text');
       const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
@@ -253,9 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnSeatmap.addEventListener('click', () => {
       seatmapOverlay.classList.add('active');
-      reset_btn_seatmap();
+      reset_seatmap();
       hideCustomUI();
       if (window.setZoomLevel) window.setZoomLevel(0, true);
+      if (viewer._autoTour.isRunning() == true) {
+        viewer._autoTour.stop();
+      }
     });
 
     // Close when clicking outside the popup
@@ -749,11 +754,14 @@ window.showCustomUI = function () {
 function btn_menu_show() {
   document.getElementById('service-select-overlay').classList.add('show');
   //hideCustomUI();
-  //reset_btn_seatmap();
   if (viewer._autoTour.isRunning() == true) {
     viewer._autoTour.stop();
   }
   reset_btn_seatmap();
+
+  document.querySelectorAll('svg rect.selected-active').forEach(el => {
+    el.classList.remove('selected-active');
+  });
 }
 
 function btn_help_show() {
