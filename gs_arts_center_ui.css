@@ -164,14 +164,17 @@ textarea,
     display: flex;
     align-items: stretch;
     /* gap: 1px; */
+    border-right: #ffffff8c 6px solid;
+    padding-right: 8px;
 }
 
+/* 
 .nav-control .bar {
     width: 6px;
     background-color: rgba(255, 255, 255, 0.55);
     margin-left: 8px;
     flex-shrink: 0;
-}
+} */
 
 .nav-arrow {
     padding: 0px;
@@ -199,23 +202,28 @@ textarea,
 .nav-text span {
     font-weight: 900;
     color: inherit;
-    margin-right: 5px;
+    margin-right: 1px;
 }
 
-#btn_prev_seat,
-#btn_next_seat {
-    padding: 0px;
-    width: 36px;
+#btn_seatmap {
+    position: relative;
+    width: 137px;
     height: 36px;
-}
-
-#btn_seatmap,
-#btn_stage_change {
-    width: 100%;
-    height: 36px;
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: bold;
     vertical-align: middle;
+    letter-spacing: 2px;
+}
+
+#btn_stage_change {
+    position: relative;
+    width: 207px;
+    height: 36px;
+    font-size: 16px;
+    font-weight: bold;
+    vertical-align: middle;
+    letter-spacing: 2px;
+    margin-right: 1px;
 }
 
 #btn_seatmap_select_title {
@@ -223,23 +231,17 @@ textarea,
     font-weight: 700;
     display: block;
     padding-top: 5px;
+    letter-spacing: 2px;
 }
 
+#btn_seatmap_text,
 #btn_seatmap_floor {
-    font-size: 14px;
-    font-weight: 800;
-}
-
-#btn_seatmap_text {
-    font-size: 12px;
-    font-weight: normal;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0px;
 }
 
 /* 좌석선택 툴팁 말풍선 스타일 */
-#btn_seatmap {
-    position: relative;
-}
-
 #btn_seatmap.has-selection::after {
     content: "좌석선택";
     position: absolute;
@@ -282,10 +284,6 @@ textarea,
 }
 
 /* 무대변경 안내 말풍선 스타일 */
-#btn_stage_change {
-    position: relative;
-}
-
 #btn_stage_change::after {
     content: attr(data-msg);
     position: absolute;
@@ -479,17 +477,19 @@ textarea,
     border: none;
     cursor: pointer;
     padding: 5px 20px;
+    transition: transform 0.3s ease;
 }
 
-.seatmap-close-btn svg {
-    width: 40px;
-    height: 40px;
-    fill: #cccccc;
-    transition: fill 0.2s;
+.seatmap-close-btn img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    display: block;
 }
 
-.seatmap-close-btn:hover svg {
-    fill: #666666;
+.seatmap-close-btn:hover img {
+    transform: scale(1.1);
+    transition-duration: 0.5s;
 }
 
 .seatmap-header {
@@ -532,20 +532,21 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 70px;
+    width: 140px;
+    padding: 2px 24px;
 }
 
 .floor-btn {
     background-color: #ffffff;
     color: rgba(0, 0, 0, 0.35);
     border: 0;
-    padding: 4px 6px 4px 0px;
-    font-size: 28px;
+    padding: 6px 26px 6px 2px;
+    font-size: 22px;
     font-weight: 700;
     cursor: pointer;
-    text-align: center;
+    text-align: right;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-right: 6px solid #EFEFEE;
+    border-right: 6px solid #efefef;
 
 }
 
@@ -671,40 +672,43 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 168px;
+    width: 140px;
     /* border-left: 6px solid #F2F2F2; */
-    padding-left: 10px;
+    padding: 0 10px;
 }
 
 .section-btn {
+    display: inline;
     background-color: #ffffff;
     color: rgba(0, 0, 0, 0.35);
     border: 0;
-    padding: 2px 0 2px 18px;
-    font-size: 16px;
-    font-weight: normal;
+    padding: 2px 4px 0px 16px;
     cursor: pointer;
     text-align: left;
     position: relative;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-left: 4px solid #F2F2F2;
+    border-left: 6px solid #efefef;
 }
 
 .section-btn .section-floor-text {
-    display: inline-flex;
+    float: left;
+    width: 34px;
     height: 38px;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     align-items: center;
+    text-align: right;
 }
 
 .section-btn .section-line-text {
-    display: inline-flex;
-    height: 38px;
+    float: right;
+    height: 34px;
     font-size: 16px;
     font-weight: 700;
     align-items: center;
     vertical-align: bottom;
+    text-align: right;
+    margin-top: 4px;
 }
 
 /* 
@@ -733,88 +737,7 @@ textarea,
 
 
 
-/* Responsive */
-@media (max-width: 768px) {
-    .seatmap-popup {
-        width: 96%;
-        height: 96%;
-        padding: 12px;
-    }
 
-    .seatmap-header {
-        font-size: 16px;
-        padding: 5px;
-        margin: 10px 0;
-        height: auto;
-        min-height: 48px;
-    }
-
-    .seatmap-header-text {
-        font-size: 15px;
-    }
-
-    .seatmap-header-line {
-        height: 48px;
-        width: 6px;
-    }
-
-    .seatmap-content {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .seatmap-floor-selector {
-        flex-direction: row;
-        width: 100%;
-        gap: 6px;
-    }
-
-    .floor-btn {
-        padding: 6px 10px;
-        font-size: 14px;
-        font-weight: 700;
-        flex: 1;
-        border-radius: 4px;
-    }
-
-    .seatmap-section-selector {
-        display: flex !important;
-        flex-direction: row !important;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        border-left: none !important;
-        padding-left: 0 !important;
-        padding-bottom: 6px;
-        gap: 6px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-
-    .section-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-        font-weight: 500;
-        white-space: nowrap;
-        flex-shrink: 0;
-        border-radius: 4px;
-    }
-
-    .section-btn span {
-        font-size: 12px !important;
-        margin-right: 3px;
-    }
-
-    .seatmap-map-container {
-        flex: 1;
-        min-height: 250px;
-    }
-
-    .seatmap-zoom-controls button {
-        width: 36px;
-        height: 36px;
-    }
-}
 
 
 /*  ------------   */
@@ -1061,19 +984,7 @@ textarea,
     }
 }
 
-@media (max-width: 768px) {
-    #start-banner .banner-inner {
-        top: 8px;
-        right: 8px;
-        bottom: 8px;
-        left: 8px;
-    }
 
-    #start-banner-logo {
-        max-width: 400px;
-        margin-bottom: 80px;
-    }
-}
 
 
 #manual-ui-overlay {
@@ -1151,7 +1062,7 @@ textarea,
     cursor: pointer;
     z-index: 10;
     padding: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
 }
 
 #btn_help_hide img {
@@ -1316,77 +1227,9 @@ textarea,
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-/* Responsive Overrides */
-@media (max-width: 1200px) {
-    .ssp-card-btn {
-        padding: 24px 30px;
-    }
 
-    .ssp-card-title {
-        font-size: 20px;
-        margin-bottom: 14px;
-    }
 
-    .ssp-card-desc {
-        font-size: 13px;
-    }
-}
 
-@media (max-width: 768px) {
-    .service-select-card {
-        top: 8px;
-        right: 8px;
-        bottom: 8px;
-        left: 8px;
-        padding: 20px 15px;
-    }
-
-    .service-select-inner {
-        max-width: min(100%, calc(35vh * 3.245));
-    }
-
-    .service-select-footer {
-        flex-direction: column;
-        gap: 16px;
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
-    }
-
-    .ssp-card-btn {
-        padding: 20px 24px;
-    }
-
-    .ssp-card-title {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-
-    .ssp-card-desc {
-        font-size: 12px;
-    }
-
-    .manual-ui-card {
-        top: 8px;
-        right: 8px;
-        bottom: 8px;
-        left: 8px;
-        padding: 20px 15px;
-    }
-
-    .manual-ui-inner {
-        max-width: min(100%, calc(35vh * 3.245));
-    }
-
-    #btn_help_hide {
-        top: -45px;
-    }
-
-    #btn_help_hide img {
-        width: 18px;
-        height: 18px;
-    }
-}
 
 /* STAGE & OP Box outlines for 1F */
 .seatmap-img-stage-box {
@@ -1724,6 +1567,7 @@ svg rect[id^="View_"].selected-active {
     padding: 0;
     margin: 0 0 6px 0;
     transition: all 0.3s ease;
+    letter-spacing: 2px;
 }
 
 #tour-button:hover {
@@ -1825,7 +1669,7 @@ view ui-hoverable ui-panel active-view
 }
 
 #menu-bar {
-    right: 0px;
+    right: 10px;
     bottom: 10px;
 }
 
@@ -1895,6 +1739,9 @@ button:focus {
 #btn_prev_seat,
 #btn_next_seat {
     background-size: 24px 24px !important;
+    padding: 0px;
+    width: 34px;
+    height: 36px;
 }
 
 #home-button:hover,
@@ -1915,7 +1762,7 @@ button:focus {
 
 /* Home Button: 30(Normal), 60(Hover), 100(Active) */
 #home-button {
-    background-image: url('img/03_free_move_page_ui/FMP_icon1_home60.png') !important;
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_home100.png') !important;
 }
 
 #home-button:hover {
@@ -1928,7 +1775,7 @@ button:focus {
 
 /* Tutorial Button: 30(Normal), 60(Hover), 100(Active) */
 #help2-button {
-    background-image: url('img/03_free_move_page_ui/FMP_icon1_tutorial60.png') !important;
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_tutorial100.png') !important;
 }
 
 #help2-button:hover {
@@ -1941,7 +1788,7 @@ button:focus {
 
 /* Screen Button: 30(Normal), 60(Hover), 100(Active) */
 #fullscreen-button {
-    background-image: url('img/03_free_move_page_ui/FMP_icon1_screen60.png') !important;
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_screen100.png') !important;
 }
 
 #fullscreen-button:hover {
@@ -1955,7 +1802,7 @@ button:focus {
 /* Prev Seat Button: 30(Normal), 60(Hover), 100(Active) */
 #btn_prev_seat {
     margin-right: 1px;
-    background-image: url('img/03_free_move_page_ui/FMP_icon1_movL60.png') !important;
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movL100.png') !important;
 }
 
 #btn_prev_seat:hover {
@@ -1969,7 +1816,8 @@ button:focus {
 /* Next Seat Button: 30(Normal), 60(Hover), 100(Active) */
 #btn_next_seat {
     margin-left: 1px;
-    background-image: url('img/03_free_move_page_ui/FMP_icon1_movR60.png') !important;
+    margin-right: 1px;
+    background-image: url('img/03_free_move_page_ui/FMP_icon1_movR100.png') !important;
 }
 
 #btn_next_seat:hover {
@@ -2284,4 +2132,196 @@ svg rect[id^="View_"].selected-active {
 /* 줌 컨텐츠의 기준점을 명시적으로 정중앙으로 강제 지정 */
 #seatmap-zoom-content {
     transform-origin: center center !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES (AT THE BOTTOM TO ENSURE CORRECT OVERRIDES)
+   ========================================================================== */
+
+/* Responsive Overrides (max-width: 1200px) */
+@media (max-width: 1200px) {
+    .ssp-card-btn {
+        padding: 24px 30px;
+    }
+
+    .ssp-card-title {
+        font-size: 20px;
+        margin-bottom: 14px;
+    }
+
+    .ssp-card-desc {
+        font-size: 13px;
+    }
+}
+
+/* Responsive Overrides (max-width: 768px) */
+@media (max-width: 768px) {
+    .seatmap-popup {
+        width: 96%;
+        height: 82%;
+        padding: 12px;
+    }
+
+    .seatmap-header {
+        font-size: 16px;
+        padding: 5px;
+        margin: 10px 0;
+        height: auto;
+        min-height: 48px;
+    }
+
+    .seatmap-header-text {
+        font-size: 15px;
+    }
+
+    .seatmap-header-line {
+        height: 48px;
+        width: 6px;
+    }
+
+    .seatmap-content {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .seatmap-floor-selector {
+        flex-direction: row;
+        width: 100%;
+        gap: 6px;
+    }
+
+    .floor-btn {
+        padding: 6px 10px;
+        font-size: 14px;
+        font-weight: 700;
+        flex: 1;
+        border-radius: 4px;
+    }
+
+    .seatmap-section-selector {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        border-left: none !important;
+        padding-left: 0 !important;
+        padding-bottom: 6px;
+        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .section-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-radius: 4px;
+    }
+
+    .section-btn span {
+        font-size: 12px !important;
+        margin-right: 3px;
+    }
+
+    .seatmap-map-container {
+        flex: 1;
+        min-height: 250px;
+    }
+
+    .seatmap-zoom-controls {
+        top: 12px;
+        right: 12px;
+        gap: 8px;
+    }
+
+    .seatmap-zoom-controls button {
+        width: 36px;
+        height: 36px;
+    }
+
+    #seatmap-zoom-in {
+        background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomin100.png");
+        scale: 0.5;
+    }
+
+    #seatmap-zoom-out {
+        background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomout100.png");
+        scale: 0.5;
+    }
+
+    #seatmap-zoom-reset {
+        background-image: url("img/04_seat_view_page_ui/SVP_icon1_zoomre100.png");
+        scale: 0.5;
+    }
+
+    /* Start Banner Mobile */
+    #start-banner .banner-inner {
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
+    }
+
+    #start-banner-logo {
+        max-width: 400px;
+        margin-bottom: 80px;
+    }
+
+    /* Service Select & Manual UI Mobile */
+    .service-select-card {
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
+        padding: 20px 15px;
+    }
+
+    .service-select-inner {
+        max-width: min(100%, calc(35vh * 3.245));
+    }
+
+    .service-select-footer {
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .ssp-card-btn {
+        padding: 20px 24px;
+    }
+
+    .ssp-card-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .ssp-card-desc {
+        font-size: 12px;
+    }
+
+    .manual-ui-card {
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
+        padding: 20px 15px;
+    }
+
+    .manual-ui-inner {
+        max-width: min(100%, calc(35vh * 3.245));
+    }
+
+    #btn_help_hide {
+        top: -45px;
+    }
+
+    #btn_help_hide img {
+        width: 18px;
+        height: 18px;
+    }
 }
