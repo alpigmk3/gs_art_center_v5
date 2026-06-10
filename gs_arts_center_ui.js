@@ -90,13 +90,6 @@ function reset_seatmap() {
   if (btn_seatmap) btn_seatmap.classList.remove('has-selection');
 }
 
-function reset_seatmap2() {
-  reset_seatmap();
-  document.querySelectorAll('svg rect.selected-active').forEach(el => {
-    el.classList.remove('selected-active');
-  });
-}
-
 function reset_btn_seatmap() {
   currentSeatViewId = null;
 
@@ -115,7 +108,7 @@ function reset_btn_seatmap() {
 }
 
 function btn_autotour() {
-  reset_seatmap2();
+  reset_seatmap();
 }
 
 
