@@ -69,7 +69,7 @@ function showUI01() {
 
   // 초기 활성화
   setTimeout(() => {
-    ['curtain_1:그룹#141', 'curtain_2:그룹#28', 'curtian_3:그룹#30'].forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+    ['curtain:그룹#152', 'curtain_1', 'curtain_2', 'curtian_3'].forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame()
   }, 1550);
 };
@@ -784,10 +784,10 @@ var stage_change_step = 0;
 // const nodeNames = ['curtain_1:그룹#141', 'curtain_2:그룹#28', 'curtain_3:그룹#30']
 
 
-const nodeNames1 = ['curtian_3:그룹#30']
-const nodeNames2 = ['curtain_2:그룹#28']
-const nodeNames3 = ['curtain_1:그룹#141']
-const nodeNames = ['curtain_1:그룹#141', 'curtain_2:그룹#28', 'curtian_3:그룹#30']
+const nodeNames1 = ['curtian_3']
+const nodeNames2 = ['curtain_2']
+const nodeNames3 = ['curtain_1']
+const nodeNames = ['curtain_1', 'curtain_2', 'curtian_3']
 
 function btn_stage_change() {
   // 무대장치 onoff 시 좌석해제

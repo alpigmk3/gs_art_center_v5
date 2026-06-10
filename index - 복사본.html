@@ -6,7 +6,7 @@
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="description" content="Interactive 3D walkthrough">
+  <meta name="description" content="GS Arts Center 3D 좌석 시야 Interactive 3D walkthrough">
 
   <link rel="icon" href="2026-06-05-10-00-02/favicon.ico">
 
@@ -14,14 +14,20 @@
 
   <link href="2026-06-05-10-00-02/webwalk/style.css" rel="stylesheet" type="text/css">
 
+  <link href="img/font/Pretendard-1.3.9/web/variable/pretendardvariable.css" rel="stylesheet" type="text/css">
+  <link href="gs_arts_center_ui.css" rel="stylesheet" type="text/css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <style>
     @font-face {
-      font-family: 'Open Sans';
+      font-family: 'Pretendard Variable, Open Sans';
       font-style: normal;
       font-weight: 400;
       src: local('Open Sans'), local('OpenSans'),
-      url('2026-06-05-10-00-02/webwalk/font/open-sans-v28-vietnamese_latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-      url('2026-06-05-10-00-02/webwalk/font/open-sans-v28-vietnamese_latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        url('2026-06-05-10-00-02/webwalk/font/open-sans-v28-vietnamese_latin-ext_latin-regular.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('2026-06-05-10-00-02/webwalk/font/open-sans-v28-vietnamese_latin-ext_latin-regular.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
     }
 
     /* Original font awesome font-family names have been replaced to not rely on
@@ -32,17 +38,20 @@
     @font-face {
       font-family: 'FontAwesomeBrands';
       src: url("2026-06-05-10-00-02/webwalk/font/fa-brands-400.woff2") format("woff2"),
-           url("2026-06-05-10-00-02/webwalk/font/fa-brands-400.woff") format("woff"); }
+        url("2026-06-05-10-00-02/webwalk/font/fa-brands-400.woff") format("woff");
+    }
 
     @font-face {
       font-family: 'FontAwesomeRegular';
       src: url("2026-06-05-10-00-02/webwalk/font/fa-regular-400.woff2") format("woff2"),
-           url("2026-06-05-10-00-02/webwalk/font/fa-regular-400.woff") format("woff"); }
+        url("2026-06-05-10-00-02/webwalk/font/fa-regular-400.woff") format("woff");
+    }
 
     @font-face {
       font-family: 'FontAwesomeSolid';
       src: url("2026-06-05-10-00-02/webwalk/font/fa-solid-900.woff2") format("woff2"),
-           url("2026-06-05-10-00-02/webwalk/font/fa-solid-900.woff") format("woff"); }
+        url("2026-06-05-10-00-02/webwalk/font/fa-solid-900.woff") format("woff");
+    }
 
     #cover-image {
       background-image: url("2026-06-05-10-00-02/cover.jpg");
@@ -53,7 +62,7 @@
     }
   </style>
 
-  <title>3D scene</title>
+  <title>GS Arts Center 3D 좌석 시야 3D 뷰어 </title>
 </head>
 
 <body>
@@ -77,8 +86,7 @@
   <div id="info-message" class="message info-message" style="display: none">
   </div>
 
-  <div id="error-message" class="message error-message absolute-center"
-       style="display: none">
+  <div id="error-message" class="message error-message absolute-center" style="display: none">
   </div>
 
   <!-- Error messages in old IEs can not be shown from JS, because old
@@ -97,12 +105,11 @@
 
   <div id="info-bar" class="ui-top ui-left">
     <div id="info-bar-slide">
-      <a id="author-logo" class="info-item ui-panel"
-         style="display: none"
-         target="_blank">
+      <a id="author-logo" class="info-item ui-panel" style="display: none" target="_blank">
         <img>
       </a><!-- NS = no spaces
-   --><div id="info-text" class="info-item ui-panel" style="display: none">
+   -->
+      <div id="info-text" class="info-item ui-panel" style="display: none">
         <div>
           <div id="info-title"></div>
         </div>
@@ -113,42 +120,39 @@
     </div>
   </div>
 
-  <div id="menu-bar" class="ui-bottom ui-right">
+  <div id="menu-bar" class="ui-bottom">
+
     <div id="menu-bar-slide">
-      <div id="menu-bar-folder" class="menu-item ui-hoverable ui-panel"
-           style="display: none">
-        <img src="2026-06-05-10-00-02/webwalk/img/fold-horizontal.svg">
+      <div id="menu-bar-folder" class="menu-item ui-hoverable ui-panel">
+        <img src="img/03_free_move_page_ui/FMP_icon2_close.png">
       </div><!-- NS
-   --><div id="menu-bar-content">
+   -->
+      <div id="menu-bar-content">
         <div id="menu-buttons" style="display: none">
-          <div id="help-button"
-               class="menu-button menu-item ui-hoverable ui-panel">
+          <div id="help-button" class="menu-button menu-item ui-hoverable ui-panel" style="display: none">
             ?
           </div><!-- NS
-       --><div id="minimap-button-toggle"
-               class="menu-button menu-item ui-hoverable ui-panel"
-               style="display:none">
+       -->
+          <div id="minimap-button-toggle" class="menu-button menu-item ui-hoverable ui-panel" style="display:none">
             <img src="2026-06-05-10-00-02/webwalk/img/map.svg">
           </div><!-- NS
-       --><div id="tour-button"
-               class="menu-button menu-item ui-hoverable ui-panel"
-               style="display: none">
-            <img src="2026-06-05-10-00-02/webwalk/img/tour.svg">
-          </div><!-- NS
-       --><div id="vr-button"
-               class="vr-specific menu-button menu-item ui-hoverable ui-panel"
-               style="display: none">
+       -->
+
+          <div id="vr-button" class="vr-specific menu-button menu-item ui-hoverable ui-panel" style="display: none">
             VR
           </div><!-- NS
-       --><div id="fullscreen-button"
-               class="fullscreen-specific menu-button menu-item ui-hoverable
-                      ui-panel"
-               style="display: none">
-            <img src="2026-06-05-10-00-02/webwalk/img/fullscreen.svg">
+       -->
+          <div id="home-button" class="fullscreen-specific menu-button menu-item ui-hoverable"
+            onclick="btn_menu_show();">
+          </div>
+          <div id="help2-button" class="fullscreen-specific menu-button menu-item ui-hoverable"
+            onclick="btn_help_show();">
+          </div>
+          <div id="fullscreen-button" class="fullscreen-specific menu-button menu-item ui-hoverable">
           </div>
         </div><!-- NS
-     --><a id="engine-logo" class="menu-item ui-panel" style="display: none"
-           href="https://www.shapespark.com" target="_blank">
+     --><a id="engine-logo" class="menu-item ui-panel" style="display: none" href="https://www.shapespark.com"
+          target="_blank">
           <div id="engine-logo-text" style="display: none"></div><!-- NS
        --><img src="2026-06-05-10-00-02/webwalk/img/shapespark-logo.svg">
         </a>
@@ -158,6 +162,12 @@
 
   <div id="view-list" class="ui-top ui-right" style="display: none">
     <div id="view-list-slide">
+      <div id="tour-button" class="" style="display: none" onclick="btn_autotour()">
+        <span>자동이동</span>
+        <img src="img/03_free_move_page_ui/FMP_icon2_auto1.png" class="auto-run-ani">
+        <img src="img/03_free_move_page_ui/FMP_icon2_auto2.png" class="auto-pause-ani">
+      </div>
+
       <div id="view-list-items" class="ui-scrollbar">
         <div class="view ui-hoverable ui-panel"></div>
       </div>
@@ -188,62 +198,58 @@
   <div id="view-mode" class="ui-top ui-center" style="display: none">
     <div id="view-mode-slide">
       <div class="view-mode-container">
-        <div id="view-mode-top"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-top" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-top.svg">
         </div>
-        <div id="view-mode-front"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-front" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-front.svg">
         </div>
-        <div id="view-mode-left"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-left" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-left.svg">
         </div>
-        <div id="view-mode-fps"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-fps" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-fps.svg">
         </div>
       </div>
       <div class="view-mode-container">
-        <div id="view-mode-persp"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-persp" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-persp.svg">
         </div>
-        <div id="view-mode-ortho"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-ortho" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-ortho.svg">
         </div>
       </div>
       <div class="view-mode-container">
-        <div id="view-mode-color"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-color" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-color.svg">
         </div>
-        <div id="view-mode-wireframe-opaque"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-wireframe-opaque" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-wireframe-opaque.svg">
         </div>
-        <div id="view-mode-wireframe-transparent"
-             class="menu-item view-mode-item ui-hoverable ui-panel">
+        <div id="view-mode-wireframe-transparent" class="menu-item view-mode-item ui-hoverable ui-panel">
           <img src="2026-06-05-10-00-02/webwalk/img/view-mode-wireframe-transparent.svg">
         </div>
       </div>
     </div>
   </div>
 
-  <img id="play-button" class="absolute-center" src="2026-06-05-10-00-02/webwalk/img/play.svg"
-       style="display: none">
+  <img id="play-button" class="absolute-center" src="2026-06-05-10-00-02/webwalk/img/play.svg" style="display: none">
 
   <div id='interaction-prompt' class="ui-all-center ui-panel" style="display: none">
     <div class='interaction-prompt-icon'>
-      <img class='interaction-prompt-icon-idle interaction-prompt-desktop' src="2026-06-05-10-00-02/webwalk/img/pointer.svg"/>
-      <img class='interaction-prompt-icon-pressed interaction-prompt-desktop' src="2026-06-05-10-00-02/webwalk/img/pointer-pressed.svg"/>
-      <img class='interaction-prompt-icon-idle interaction-prompt-mobile' src="2026-06-05-10-00-02/webwalk/img/hand.svg"/>
-      <img class='interaction-prompt-icon-pressed interaction-prompt-mobile' src="2026-06-05-10-00-02/webwalk/img/hand-pressed.svg"/>
+      <img class='interaction-prompt-icon-idle interaction-prompt-desktop'
+        src="2026-06-05-10-00-02/webwalk/img/pointer.svg" />
+      <img class='interaction-prompt-icon-pressed interaction-prompt-desktop'
+        src="2026-06-05-10-00-02/webwalk/img/pointer-pressed.svg" />
+      <img class='interaction-prompt-icon-idle interaction-prompt-mobile'
+        src="2026-06-05-10-00-02/webwalk/img/hand.svg" />
+      <img class='interaction-prompt-icon-pressed interaction-prompt-mobile'
+        src="2026-06-05-10-00-02/webwalk/img/hand-pressed.svg" />
     </div>
-    <div data-strings="help.interactiveDesktop" class='interaction-prompt-indicator-text interaction-prompt-desktop'></div>
-    <div data-strings="help.interactiveMobile" class='interaction-prompt-indicator-text interaction-prompt-mobile'></div>
+    <div data-strings="help.interactiveDesktop" class='interaction-prompt-indicator-text interaction-prompt-desktop'>
+    </div>
+    <div data-strings="help.interactiveMobile" class='interaction-prompt-indicator-text interaction-prompt-mobile'>
+    </div>
   </div>
 
   <!-- When the help is to be shown automatically during load (#help
@@ -253,13 +259,13 @@
   <div id="help-and-primary-progress" class="absolute-center">
 
     <div id="desktop-help" class="help ui-panel" style="display: none">
-      <img id="close-desktop-help-button"
-           class="close-help-button ui-close-hoverable"
-           src="2026-06-05-10-00-02/webwalk/img/close.svg">
+      <img id="close-desktop-help-button" class="close-help-button ui-close-hoverable"
+        src="2026-06-05-10-00-02/webwalk/img/close.svg">
       <div id="desktop-help-switch">
         <div data-strings="help.basic" id="basic-desktop-help-option">
         </div><!-- NS = no spaces
-     --><div data-strings="help.advanced" id="advanced-desktop-help-option">
+     -->
+        <div data-strings="help.advanced" id="advanced-desktop-help-option">
         </div>
       </div>
 
@@ -270,13 +276,17 @@
             <h1 data-strings="help.mouse"></h1>
             <img src="2026-06-05-10-00-02/webwalk/img/mouse-controls.svg">
           </div><!-- NS
-       --><div class="help-column3-sep"></div><!-- NS
-       --><div class="help-column3">
+       -->
+          <div class="help-column3-sep"></div><!-- NS
+       -->
+          <div class="help-column3">
             <h1 data-strings="help.keyboard"></h1>
             <img src="2026-06-05-10-00-02/webwalk/img/keyboard-controls.svg">
           </div><!-- NS
-       --><div class="help-column3-sep"></div><!-- NS
-       --><div class="help-column3">
+       -->
+          <div class="help-column3-sep"></div><!-- NS
+       -->
+          <div class="help-column3">
             <h1 data-strings="help.vrTeleport"></h1>
             <img src="2026-06-05-10-00-02/webwalk/img/vr-controls.svg">
           </div>
@@ -287,89 +297,113 @@
           <div>
             <div class="help-how" data-strings="help.holdLeftButton">
             </div><!-- NS
-         --><div data-strings="help.lookAround" class="help-what"></div>
+         -->
+            <div data-strings="help.lookAround" class="help-what"></div>
           </div>
           <div>
             <div class="help-how" data-strings="help.clickLeftButton">
             </div><!-- NS
-         --><div data-strings="help.walkToClickedPlace" class="viewer-specific help-what">
+         -->
+            <div data-strings="help.walkToClickedPlace" class="viewer-specific help-what">
             </div><!-- NS
-         --><div data-strings="help.selectMaterialLightObject"
-              class="editor-specific help-what" style="display: none">
+         -->
+            <div data-strings="help.selectMaterialLightObject" class="editor-specific help-what" style="display: none">
             </div>
           </div>
           <div>
-            <div class="help-how" data-strings="help.scroll" ></div><!-- NS
-         --><div data-strings="help.walkStraight" class="help-what"></div>
+            <div class="help-how" data-strings="help.scroll"></div><!-- NS
+         -->
+            <div data-strings="help.walkStraight" class="help-what"></div>
           </div>
           <h1 data-strings="help.keyboard"></h1>
           <div>
             <div class="help-how">
               <div>
                 <div class="help-key-placeholder"></div><!-- NS
-             --><div class="help-key">&#8593;</div><!-- NS
-             --><div class="help-key-placeholder"></div>
+             -->
+                <div class="help-key">&#8593;</div><!-- NS
+             -->
+                <div class="help-key-placeholder"></div>
               </div>
               <div>
                 <div class="help-key">&#8592;</div><!-- NS
-             --><div class="help-key">&#8595;</div><!-- NS
-             --><div class="help-key">&#8594;</div>
+             -->
+                <div class="help-key">&#8595;</div><!-- NS
+             -->
+                <div class="help-key">&#8594;</div>
               </div>
             </div><!-- NS
-         --><div data-strings="help.walkStraightAndLookAround" class="help-what">
+         -->
+            <div data-strings="help.walkStraightAndLookAround" class="help-what">
             </div>
           </div>
           <div>
             <div class="help-how">
               <div>
                 <div class="help-key-placeholder"></div><!-- NS
-             --><div class="help-key">W</div><!-- NS
-             --><div class="help-key-placeholder"></div>
+             -->
+                <div class="help-key">W</div><!-- NS
+             -->
+                <div class="help-key-placeholder"></div>
               </div>
               <div>
                 <div class="help-key">A</div><!-- NS
-             --><div class="help-key">S</div><!-- NS
-             --><div class="help-key">D</div>
+             -->
+                <div class="help-key">S</div><!-- NS
+             -->
+                <div class="help-key">D</div>
               </div>
             </div><!-- NS
-         --><div data-strings="help.walkStraightAndSideways" class="help-what"></div>
+         -->
+            <div data-strings="help.walkStraightAndSideways" class="help-what"></div>
           </div>
           <div>
             <div class="help-how">
-              <div class="help-key">PgUp</div><div class="help-key">PgDn</div><!-- NS
-           --><div class="help-key-sep"></div><!-- NS
-           --><div class="help-key">E</div><div class="help-key">Q</div>
+              <div class="help-key">PgUp</div>
+              <div class="help-key">PgDn</div><!-- NS
+           -->
+              <div class="help-key-sep"></div><!-- NS
+           -->
+              <div class="help-key">E</div>
+              <div class="help-key">Q</div>
             </div><!-- NS
-         --><div data-strings="help.changeHeight" class="help-what"></div>
+         -->
+            <div data-strings="help.changeHeight" class="help-what"></div>
           </div>
           <div>
             <div class="help-how">
               <div class="help-key">1</div>
               &#8211;
               <div class="help-key">9</div><!-- NS
-           --><div class="help-key-sep"></div><!-- NS
-           --><div class="help-key">[</div>
+           -->
+              <div class="help-key-sep"></div><!-- NS
+           -->
+              <div class="help-key">[</div>
               <div class="help-key">]</div>
             </div><!-- NS
-       --><div data-strings="help.switchView" class="help-what"></div>
+       -->
+            <div data-strings="help.switchView" class="help-what"></div>
           </div>
           <div class="help-how">
             <div class="help-key">P</div>
           </div><!-- NS
-       --><div data-strings="help.screenshot" class="help-what"></div>
+       -->
+          <div data-strings="help.screenshot" class="help-what"></div>
           <div class="editor-specific help-how" style="display: none">
             <div class="help-key">I</div>
           </div><!-- NS
-       --><div data-strings="help.illuminationPreview" class="editor-specific help-what"
-               style="display: none"></div>
+       -->
+          <div data-strings="help.illuminationPreview" class="editor-specific help-what" style="display: none"></div>
           <div class="help-how">
             <div class="help-key">M</div>
           </div><!-- NS
-       --><div data-strings="help.hideShowMenu" class="help-what"></div>
+       -->
+          <div data-strings="help.hideShowMenu" class="help-what"></div>
           <div class="help-how">
             <div class="help-key">L</div>
           </div><!-- NS
-       --><div data-strings="help.hideShowMousePointer" class="help-what"></div>
+       -->
+          <div data-strings="help.hideShowMousePointer" class="help-what"></div>
 
           <h1 data-strings="help.vrMode"></h1>
           <div>
@@ -379,38 +413,37 @@
               <div data-strings="help.clickControllerButton">
               </div>
             </div><!-- NS
-         --><div data-strings="help.teleport" class="help-what"></div>
+         -->
+            <div data-strings="help.teleport" class="help-what"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="mobile-help" class="help ui-panel"
-         style="display: none">
-      <img id="close-mobile-help-button"
-           class="close-help-button ui-close-hoverable"
-           src="2026-06-05-10-00-02/webwalk/img/close.svg">
+    <div id="mobile-help" class="help ui-panel" style="display: none">
+      <img id="close-mobile-help-button" class="close-help-button ui-close-hoverable"
+        src="2026-06-05-10-00-02/webwalk/img/close.svg">
       <div class="help-columns">
         <div class="help-column2">
           <h1 data-strings="help.touch"></h1>
           <img src="2026-06-05-10-00-02/webwalk/img/touch-controls.svg">
         </div><!-- NS
-     --><div class="help-column2-sep"></div><!-- NS
-     --><div class="navigation-help-column2">
+     -->
+        <div class="help-column2-sep"></div><!-- NS
+     -->
+        <div class="navigation-help-column2">
           <h1 data-strings="help.vrTeleport"></h1>
           <img src="2026-06-05-10-00-02/webwalk/img/vr-controls.svg">
         </div>
       </div>
     </div>
 
-    <svg id="primary-progress" viewBox="-58 -58 116 116"
-         style="display: none">
-      <circle cx="0" cy="0" r="50" stroke-width="14">
-      </circle>
-      <circle id="primary-progress-done" cx="0" cy="0" r="50"
-              stroke-width="8" stroke-dasharray="315.159"
-              stroke-dashoffset="314.159" transform="rotate(-90)">
-      </circle>
+    <svg id="primary-progress" viewBox="-58 0 316 316" xmlns="http://www.w3.org/2000/svg">
+      <!-- No dash array -->
+      <line id="primary-progress-bg" x1="-52" y1="250" x2="250" y2="250" stroke="#aaaaaa" stroke-width="9"></line>
+      <!-- No dash offset -->
+      <line id="primary-progress-done" x1="-52" y1="250" x2="250" y2="250" stroke="#000000" stroke-width="8"
+        stroke-dasharray="315.159" stroke-dashoffset="314.159"></line>
     </svg>
 
   </div>
@@ -419,29 +452,24 @@
     <div id="secondary-progress-done"></div>
   </div>
 
-  <div id="ext-html-label"
-       class="ext-popup ui-top ui-left ext-html-label-animated"
-       style="display: none">
+  <div id="ext-html-label" class="ext-popup ui-top ui-left ext-html-label-animated" style="display: none">
     <div id="ext-html-label-content" class="ext-popup-content"></div><!-- NS
- --><div id="ext-html-label-close"
-         class="ext-popup-close-button-panel ui-close-hoverable">
+ -->
+    <div id="ext-html-label-close" class="ext-popup-close-button-panel ui-close-hoverable">
       <div class="ext-popup-close-button"></div>
     </div>
   </div>
 
-  <div id="ext-meeting-status" class="ext-popup ui-top ui-left"
-       style="display: none">
+  <div id="ext-meeting-status" class="ext-popup ui-top ui-left" style="display: none">
     <div id="ext-meeting-status-content" class="ext-popup-content">
       <ul id="ext-meeting-who-list" class="ui-scrollbar ext-meeting-who-list">
       </ul>
       <div>
-        <button id="ext-meeting-mic-toggle"
-                class="ext-meeting-button ext-meeting-button-highlight">
+        <button id="ext-meeting-mic-toggle" class="ext-meeting-button ext-meeting-button-highlight">
           <span class="fa-microphone" style="display: none"></span>
           <span class="fa-microphone-slash"></span>
         </button>
-        <button id="ext-meeting-camera-toggle"
-                class="ext-meeting-button ext-meeting-button-highlight">
+        <button id="ext-meeting-camera-toggle" class="ext-meeting-button ext-meeting-button-highlight">
           <span class="fa-video" style="display: none"></span>
           <span class="fa-video-slash"></span>
         </button>
@@ -458,12 +486,11 @@
         </button>
       </div>
       <div id="ext-meeting-status-footer">
-        <span id = ext-meeting-quality-indicator-container>
+        <span id=ext-meeting-quality-indicator-container>
         </span>
         <span>
-          <button id="ext-meeting-leave"
-                  class="ext-meeting-button ext-meeting-button-highlight"
-                  data-strings="meetings.leaveMeeting">
+          <button id="ext-meeting-leave" class="ext-meeting-button ext-meeting-button-highlight"
+            data-strings="meetings.leaveMeeting">
           </button>
         </span>
       </div>
@@ -473,13 +500,209 @@
     </div>
   </div>
   <div id="ext-meeting-camera-preview" style="display: none"></div>
-  
-  
-  
-  
-  
+
+  <!-- CUSTOM UI START -->
+  <div id="start-banner">
+    <div class="banner-inner">
+      <img id="start-banner-logo" alt="GS ARTS CENTER Logo" src="img\LP_img_logo.png" />
+    </div>
+  </div>
+
+  <div id="service-select-overlay" class="">
+    <div class="service-select-card">
+      <div class="service-select-inner">
+        <div class="service-select-body">
+          <img class="tutorial-img" src="img/02_service_select_page_ui/SSP_img_tutorial.png" alt="조작 방법" />
+        </div>
+        <div class="service-select-footer">
+          <button id="btn-seatview" class="ssp-card-btn">
+            <div class="ssp-card-title">좌석선택</div>
+            <div class="ssp-card-desc-container">
+              <div class="ssp-card-line"></div>
+              <div class="ssp-card-desc">
+                원하는 좌석의 생생한 실제<br>시야를 미리 확인할 수 있습니다.
+              </div>
+            </div>
+          </button>
+          <button id="btn-autotour" class="ssp-card-btn">
+            <div class="ssp-card-title">자동투어</div>
+            <div class="ssp-card-desc-container">
+              <div class="ssp-card-line"></div>
+              <div class="ssp-card-desc">
+                버튼 하나로 공연장 전체를<br>편안하게 둘러볼 수 있습니다.
+              </div>
+            </div>
+          </button>
+          <button id="btn-freemove" class="ssp-card-btn">
+            <div class="ssp-card-title">자유이동</div>
+            <div class="ssp-card-desc-container">
+              <div class="ssp-card-line"></div>
+              <div class="ssp-card-desc">
+                원하는 위치로 자유롭게 이동하며<br>시야를 확인할 수 있습니다.
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="manual-ui-overlay" style="display: none;">
+    <div class="manual-ui-card">
+      <div class="manual-ui-inner">
+        <button id="btn_help_hide" onclick="btn_help_hide()">
+          <img src="img/05_manual_ui/MU_icon_Infomation_close.png" alt="close" />
+        </button>
+        <div class="manual-ui-body">
+          <img src="img/05_manual_ui/MU_img_Infomation.png" alt="manual" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="custom-ui-container" style="display: none">
+    <div class="custom-ui-top-left">
+      <!-- <span class="bar">|</span> GS | ARTS | CENTER -->
+      <a href="https://www.gsartscenter.com/" target="_blank" rel="noopener noreferrer"><img
+          src="img/03_free_move_page_ui/FMP_img_logo.png" alt="GS ARTS CENTER" /></a>
+    </div>
+
+    <div class="custom-ui-bottom-left">
+      <div class="nav-control">
+        <button id="btn_prev_seat" class="nav-arrow" aria-label="Previous Seat">
+        </button>
+        <button id="btn_seatmap" class="nav-text">
+          <span id="btn_seatmap_select_title">좌석 선택</span>
+          <span id="btn_seatmap_floor"></span><span id="btn_seatmap_text"></span></button>
+        <button id="btn_next_seat" class="nav-arrow" aria-label="Next Seat">
+        </button>
+        <div class="bar"></div>
+      </div>
+      <div class="nav-control">
+        <button id="btn_stage_change" class="nav-text" onclick="btn_stage_change()">무대 변경</button>
+        <div class="bar"></div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- CUSTOM UI END -->
+
+  <!-- SEAT MAP POPUP -->
+  <div id="seatmap-overlay" class="seatmap-overlay">
+    <div class="seatmap-popup">
+      <button id="seatmap-close-button" class="seatmap-close-btn" aria-label="Close">
+        <img src="img/04_seat_view_page_ui/SVP_icon_close.png" alt="Close"
+          style="width: 36px; height: 36px; object-fit: contain; display: block;" />
+      </button>
+
+      <div class="seatmap-header">
+        <div class="seatmap-header-line"></div>
+        <div class="seatmap-header-text"> 좌석 배치도에서 원하는 좌석을 선택하세요.</div>
+      </div>
+
+      <div class="seatmap-content">
+        <!-- Left Floor Selection -->
+        <div class="seatmap-floor-selector">
+          <button class="floor-btn active" data-floor="1F">1층</button>
+          <button class="floor-btn" data-floor="2F">2층</button>
+          <button class="floor-btn" data-floor="3F">3층</button>
+        </div>
+
+        <!-- Center Map Image -->
+        <div class="seatmap-map-container" id="seatmap-map-container">
+          <!-- Zoom Controls -->
+          <div class="seatmap-zoom-controls">
+            <button id="seatmap-zoom-in" title="Zoom In">+</button>
+            <button id="seatmap-zoom-out" title="Zoom Out">-</button>
+            <button id="seatmap-zoom-reset" title="Reset">⟲</button>
+          </div>
+
+          <div id="seatmap-zoom-content"
+            style="width: 100%; height: 100%; display: flex !important; justify-content: center; align-items: center;">
+            <div class="seatmap-img-floor-section active" id="floor-section-1F">
+              <!-- 배경 이미지 및 SVG 레이어가 wrapper 없이 다이렉트로 삽입됨 -->
+              <img class="seatmap-bg" src="img/seatmap/1f/SVP_img_1f.png" alt="Theatre Layout Background">
+              <img id="seatmap_1f_line_op" src="img/seatmap/1f/SVP_img_1f_OP_line.png">
+              <img id="seatmap_1f_line_a" src="img/seatmap/1f/SVP_img_1f_A_line.png">
+              <img id="seatmap_1f_line_b" src="img/seatmap/1f/SVP_img_1f_B_line.png">
+              <img id="seatmap_1f_line_c" src="img/seatmap/1f/SVP_img_1f_C_line.png">
+
+              <div class="svg-container">
+                <div id="floor1f-zone-op" class="zone-overlay"></div>
+                <div id="floor1f-zone-a" class="zone-overlay"></div>
+                <div id="floor1f-zone-b" class="zone-overlay"></div>
+                <div id="floor1f-zone-c" class="zone-overlay"></div>
+              </div>
+            </div>
+            <div class="seatmap-img-floor-section" id="floor-section-2F">
+              <img class="seatmap-bg" src="img/seatmap/2f/SVP_img_2f.png" alt="Theatre Layout Background">
+              <img id="seatmap_2f_line_a" src="img/seatmap/2f/SVP_img_2f_A_line.png">
+              <img id="seatmap_2f_line_b" src="img/seatmap/2f/SVP_img_2f_B_line.png">
+              <img id="seatmap_2f_line_c" src="img/seatmap/2f/SVP_img_2f_C_line.png">
+              <div class="svg-container">
+                <div id="floor2f-zone-a" class="zone-overlay"></div>
+                <div id="floor2f-zone-b" class="zone-overlay"></div>
+                <div id="floor2f-zone-c" class="zone-overlay"></div>
+              </div>
+            </div>
+            <div class="seatmap-img-floor-section" id="floor-section-3F">
+              <img class="seatmap-bg" src="img/seatmap/3f/SVP_img_3f.png" alt="Theatre Layout Background">
+              <img id="seatmap_3f_line_a" src="img/seatmap/3f/SVP_img_3f_A_line.png">
+              <img id="seatmap_3f_line_b" src="img/seatmap/3f/SVP_img_3f_B_line.png">
+              <img id="seatmap_3f_line_c" src="img/seatmap/3f/SVP_img_3f_C_line.png">
+              <div class="svg-container">
+                <div id="floor3f-zone-a" class="zone-overlay"></div>
+                <div id="floor3f-zone-b" class="zone-overlay"></div>
+                <div id="floor3f-zone-c" class="zone-overlay"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Right Section Selection -->
+        <div class="seatmap-section-selector">
+          <button class="section-btn" data-floor="1F" data-zone="OP">
+            <span class="section-floor-text">1층</span>
+            <span class="section-line-text">OP블록</span></button>
+          <button class="section-btn" data-floor="1F" data-zone="A">
+            <span class="section-floor-text">1층</span>
+            <span class="section-line-text">A블록</span></button>
+          <button class="section-btn" data-floor="1F" data-zone="B">
+            <span class="section-floor-text">1층</span>
+            <span class="section-line-text">B블록</span></button>
+          <button class="section-btn" data-floor="1F" data-zone="C">
+            <span class="section-floor-text">1층</span>
+            <span class="section-line-text">C블록</span></button>
+          <button class="section-btn" data-floor="2F" data-zone="A">
+            <span class="section-floor-text">2층</span>
+            <span class="section-line-text">A블록</span></button>
+          <button class="section-btn" data-floor="2F" data-zone="B">
+            <span class="section-floor-text">2층</span>
+            <span class="section-line-text">B블록</span></button>
+          <button class="section-btn" data-floor="2F" data-zone="C">
+            <span class="section-floor-text">2층</span>
+            <span class="section-line-text">C블록</span></button>
+          <button class="section-btn" data-floor="3F" data-zone="A">
+            <span class="section-floor-text">3층</span>
+            <span class="section-line-text">A블록</span></button>
+          <button class="section-btn" data-floor="3F" data-zone="B">
+            <span class="section-floor-text">3층</span>
+            <span class="section-line-text">B블록</span></button>
+          <button class="section-btn" data-floor="3F" data-zone="C">
+            <span class="section-floor-text">3층</span>
+            <span class="section-line-text">C블록</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <script type="module">
     WALK.ASSETS_URL = '2026-06-05-10-00-02/';
   </script>
-<script src="2026-06-05-10-00-02/webwalk/walk.min.js" type="text/javascript"></script></body>
+  <script src="2026-06-05-10-00-02/webwalk/walk.min.js" type="text/javascript"></script>
+  <script src="gs_arts_center_seatmap.js"></script>
+  <script src="gs_arts_center_ui.js"></script>
+</body>
+
 </html>
