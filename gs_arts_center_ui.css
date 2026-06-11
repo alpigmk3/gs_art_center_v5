@@ -149,7 +149,7 @@ textarea,
 }
 
 .custom-ui-bottom-left {
-    width: 240px;
+    width: 250px;
     position: absolute;
     bottom: 10px;
     left: 10px;
@@ -160,7 +160,7 @@ textarea,
 }
 
 .nav-control {
-    width: 220px;
+    width: 230px;
     display: flex;
     align-items: stretch;
     /* gap: 1px; */
@@ -207,7 +207,7 @@ textarea,
 
 #btn_seatmap {
     position: relative;
-    width: 137px;
+    width: 143px;
     height: 36px;
     font-size: 16px;
     font-weight: bold;
@@ -217,7 +217,7 @@ textarea,
 
 #btn_stage_change {
     position: relative;
-    width: 207px;
+    width: 216px;
     height: 36px;
     font-size: 16px;
     font-weight: bold;
@@ -227,8 +227,8 @@ textarea,
 }
 
 #btn_seatmap_select_title {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: bold;
     display: block;
     padding-top: 5px;
     letter-spacing: 2px;
@@ -1740,8 +1740,8 @@ button:focus {
 #btn_next_seat {
     background-size: 24px 24px !important;
     padding: 0px;
-    width: 34px;
-    height: 36px;
+    width: 36px !important;
+    height: 36px !important;
 }
 
 #home-button:hover,
