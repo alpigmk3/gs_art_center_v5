@@ -4,7 +4,6 @@ var viewer = WALK.getViewer();
 viewer.onSceneReadyToDisplay(showUI01);
 viewer.play();
 // viewer.anchorsVisible = false;
-viewer.anchorsVisible = true;
 viewer.onViewSwitchStarted(() => {
   if (!isNavigating) {
     reset_btn_seatmap();
