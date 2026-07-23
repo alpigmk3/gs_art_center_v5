@@ -1,4 +1,4 @@
-const vec_LookAt = new THREE.Vector3(18.22, 12.4, 4.5);
+const vec_LookAt = new THREE.Vector3(18.9, -3, 4.5);
 
 var viewer = WALK.getViewer();
 viewer.onSceneReadyToDisplay(showUI01);
@@ -112,6 +112,40 @@ function btn_autotour() {
 }
 
 
+
+function btn_stage_look() {
+  if (isNavigating) return;
+  // move 3D 
+  const view = new WALK.View();
+  view.position = viewer.getCameraPosition();
+
+  const m = new THREE.Matrix4();
+  m.lookAt(view.position, vec_LookAt, new THREE.Vector3(0, 0, 1));
+  let ves = new THREE.Euler();
+  ves.setFromRotationMatrix(m, 'ZYX');
+
+  // 1. 카메라에서 바라볼 목표점(vec_LookAt)까지의 상대 거리 벡터 계산
+  var dx = vec_LookAt.x - view.position.x;
+  var dy = vec_LookAt.y - view.position.y;
+  var dz = vec_LookAt.z - view.position.z;
+
+  // 2. 수평 거리(바닥면 거리) 계산
+  var horizontalDistance = Math.sqrt(dx * dx + dy * dy);
+
+  // 3. 삼각함수를 통한 정확한 Yaw 및 Pitch 값 추출
+  // Shapespark 좌표계 기준에 맞춘 아크탄젠트/아크사인 계산
+  //view.rotation.yaw = Math.atan2(dy, dx);
+  view.rotation.yaw = ves.z;
+  view.rotation.pitch = Math.atan2(dz, horizontalDistance); // 높이차(dz)와 수평거리 비율로 피치 계산
+
+  isNavigating = true;
+  viewer.switchToView(view);
+  setTimeout(() => {
+    isNavigating = false;
+  }, 1200);
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   // Mode Selection Buttons Logic
   const btnFreeMove = document.getElementById('btn-freemove');
@@ -210,8 +244,22 @@ document.addEventListener('DOMContentLoaded', () => {
       m.lookAt(view.position, vec_LookAt, new THREE.Vector3(0, 0, 1));
       let ves = new THREE.Euler();
       ves.setFromRotationMatrix(m, 'ZYX');
+      //view.rotation.z = ves.z;
 
-      view.rotation.z = ves.z;
+      // 1. 카메라에서 바라볼 목표점(vec_LookAt)까지의 상대 거리 벡터 계산
+      var dx = vec_LookAt.x - view.position.x;
+      var dy = vec_LookAt.y - view.position.y;
+      var dz = vec_LookAt.z - view.position.z;
+
+      // 2. 수평 거리(바닥면 거리) 계산
+      var horizontalDistance = Math.sqrt(dx * dx + dy * dy);
+
+      // 3. 삼각함수를 통한 정확한 Yaw 및 Pitch 값 추출
+      // Shapespark 좌표계 기준에 맞춘 아크탄젠트/아크사인 계산
+      //view.rotation.yaw = Math.atan2(dy, dx);
+      view.rotation.yaw = ves.z;
+      view.rotation.pitch = Math.atan2(dz, horizontalDistance); // 높이차(dz)와 수평거리 비율로 피치 계산
+
       isNavigating = true;
       viewer.switchToView(view);
       setTimeout(() => {
@@ -808,6 +856,48 @@ function btn_stage_change() {
   const btnStage = document.getElementById('btn_stage_change');
   if (btnStage) {
     btnStage.setAttribute('data-msg', '무대장치' + stage_change_step);
+    btnStage.classList.add('show-msg');
+    setTimeout(() => {
+      btnStage.classList.remove('show-msg');
+    }, 2000);
+  }
+};
+
+
+var op_change_step = 0;
+const nodeOPNames1 = ['op_chair']
+const nodeOPNames2 = ['op_wall']
+const nodeOPNames3 = ['op_floor']
+const nodeOPNames = ['op_floor', 'op_wall', 'op_chair']
+
+function btn_op_change() {
+
+  nodeOPNames.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
+  viewer.requestFrame()
+
+  // OP좌석  onoff 시
+  if (op_change_step == 0) {
+    nodeOPNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+    viewer.requestFrame()
+    op_change_step = 1
+  } else if (op_change_step == 1) {
+    nodeOPNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+    viewer.requestFrame()
+    op_change_step = 2
+  } else if (op_change_step == 2) {
+    nodeOPNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+    viewer.requestFrame()
+    op_change_step = 3
+  } else if (op_change_step == 3) {
+    //nodeOPNames.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+    //viewer.requestFrame()
+    op_change_step = 0
+  }
+
+  // 무대변경 메시지 팝업 표시
+  const btnStage = document.getElementById('btn_op_change');
+  if (btnStage) {
+    btnStage.setAttribute('data-msg', 'OP좌석' + op_change_step);
     btnStage.classList.add('show-msg');
     setTimeout(() => {
       btnStage.classList.remove('show-msg');

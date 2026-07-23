@@ -759,19 +759,37 @@
     }
     function testBtn02() {
       var viewer = WALK.getViewer();
-      var pos = viewer.getCameraPosition();
+      var vpos = viewer.getCameraPosition();
+      var vrot = viewer.getCameraRotation();
+      var vec3_rot = vrot.toVector3()
+
       var display = document.getElementById('coord_display');
 
-      display.value = display.value + `\n"X": ${pos.x.toFixed(2)},"Y": ${pos.y.toFixed(2)},"Z": ${pos.z.toFixed(2)},\n`;
-      document.getElementById('input_x').value = pos.x.toFixed(2);
-      document.getElementById('input_y').value = pos.y.toFixed(2);
-      document.getElementById('input_z').value = pos.z.toFixed(2);
+      let lpx = parseFloat(vpos.x).toFixed(2);
+      let lpy = parseFloat(vpos.y).toFixed(2);
+      let lpz = parseFloat(vpos.z).toFixed(2);
+
+      let lrx = parseFloat(vec3_rot.x).toFixed(2);
+      let lry = parseFloat(vec3_rot.y).toFixed(2);
+      let lrz = parseFloat(vec3_rot.z).toFixed(2);
+
+      display.value = display.value + `\n"X": ${lpx},"Y": ${lpy},"Z": ${lpz},\n"X": ${lrx},"Y": ${lry},"Z": ${lrz},\n`;
+
+      document.getElementById('input_x').value = lpx;
+      document.getElementById('input_y').value = lpy;
+      document.getElementById('input_z').value = lpz;
+      document.getElementById('input_rotx').value = lrx;
+      document.getElementById('input_roty').value = lry;
+      document.getElementById('input_rotz').value = lrz;
     }
 
     function testBtn03() {
       const x = parseFloat(document.getElementById('input_x').value) || 0;
       const y = parseFloat(document.getElementById('input_y').value) || 0;
       const z = parseFloat(document.getElementById('input_z').value) || 0;
+      const rx = parseFloat(document.getElementById('input_rotx').value) || 0;
+      const ry = parseFloat(document.getElementById('input_roty').value) || 0;
+      const rz = parseFloat(document.getElementById('input_rotz').value) || 0;
 
       var pos = viewer.getCameraPosition();
       var rot = viewer.getCameraRotation();
@@ -782,6 +800,11 @@
       view.position.x = x;
       view.position.y = y;
       view.position.z = z;
+
+      view.rotation.x = rx;
+      view.rotation.y = ry;
+      view.rotation.z = rz;
+
       viewer.switchToView(view);
     }
 
@@ -801,6 +824,109 @@
         return true;
       });
     }
+
+    function testBtn05_lootat1() {
+      let lx = parseFloat(document.getElementById('input_lx').value) || 0;
+      let ly = parseFloat(document.getElementById('input_ly').value) || 0;
+      let lz = parseFloat(document.getElementById('input_lz').value) || 0;
+
+      let vec_LookAt2 = new THREE.Vector3(lx, ly, lz);
+
+      //var viewer = WALK.getViewer();
+      var pos = viewer.getCameraPosition();
+      //var display = document.getElementById('coord_display');
+      let lpx = parseFloat(pos.x).toFixed(2);
+      let lpy = parseFloat(pos.y).toFixed(2);
+      let lpz = parseFloat(pos.z).toFixed(2);
+
+      document.getElementById('input_x').value = lpx;
+      document.getElementById('input_y').value = lpy;
+      document.getElementById('input_z').value = lpz;
+
+      var view = new WALK.View();
+      view.position = pos;
+
+      const m = new THREE.Matrix4();
+      m.lookAt(view.position, vec_LookAt2, new THREE.Vector3(0, 0, 1));
+      let ves = new THREE.Euler();
+      ves.setFromRotationMatrix(m, 'ZYX');
+
+
+      console.log("view.position", view.position);
+      console.log("vec_LookAt2", vec_LookAt2);
+
+      const euler = new THREE.Euler().setFromRotationMatrix(m, 'ZXY');
+      console.log("Yaw (Rad):", euler.z);
+      console.log("Pitch (Rad):", euler.x);
+      console.log("Roll (Rad):", euler.y);
+      console.log("ves", ves);
+
+      //view.rotation.z = ves.z;
+      view.rotation.yaw = euler.z;      // Z축 회전량 (수평 회전 = Yaw)
+      view.rotation.pitch = euler.x;
+
+    }
+
+    function testBtn05_lootat2() {
+      if (isNavigating) return;
+
+      let lx = parseFloat(document.getElementById('input_lx').value) || 0;
+      let ly = parseFloat(document.getElementById('input_ly').value) || 0;
+      let lz = parseFloat(document.getElementById('input_lz').value) || 0;
+
+      let vec_LookAt2 = new THREE.Vector3(lx, ly, lz);
+
+      //var viewer = WALK.getViewer();
+      var pos = viewer.getCameraPosition();
+      //var display = document.getElementById('coord_display');
+      let lpx = parseFloat(pos.x).toFixed(2);
+      let lpy = parseFloat(pos.y).toFixed(2);
+      let lpz = parseFloat(pos.z).toFixed(2);
+
+      document.getElementById('input_x').value = lpx;
+      document.getElementById('input_y').value = lpy;
+      document.getElementById('input_z').value = lpz;
+
+      var view = new WALK.View();
+      view.position = pos;
+
+
+      const m = new THREE.Matrix4();
+      m.lookAt(view.position, vec_LookAt2, new THREE.Vector3(0, 0, 1));
+      let ves = new THREE.Euler();
+      ves.setFromRotationMatrix(m, 'ZYX');
+      //const euler = new THREE.Euler().setFromRotationMatrix(m, 'ZXY');
+      console.log("ves", ves);
+
+      //view.rotation.z = ves.z;  // Z축 회전량 (수평 회전 = Yaw)
+
+      // 1. 카메라에서 바라볼 목표점(vec_LookAt)까지의 상대 거리 벡터 계산
+      var dx = vec_LookAt2.x - view.position.x;
+      var dy = vec_LookAt2.y - view.position.y;
+      var dz = vec_LookAt2.z - view.position.z;
+
+      // 2. 수평 거리(바닥면 거리) 계산
+      var horizontalDistance = Math.sqrt(dx * dx + dy * dy);
+
+      // 3. 삼각함수를 통한 정확한 Yaw 및 Pitch 값 추출
+      // Shapespark 좌표계 기준에 맞춘 아크탄젠트/아크사인 계산
+      //view.rotation.yaw = Math.atan2(dy, dx);
+      view.rotation.yaw = ves.z;
+      view.rotation.pitch = Math.atan2(dz, horizontalDistance); // 높이차(dz)와 수평거리 비율로 피치 계산
+
+      // 4. 만약 여전히 반대로 뒤집혀 보인다면 아래 주석을 풀고 조절해 보세요
+      // view.rotation.pitch = -Math.atan2(dz, horizontalDistance); 
+
+      isNavigating = true;
+      viewer.switchToView(view);
+      viewer.requestFrame();
+
+      setTimeout(() => {
+        isNavigating = false;
+      }, 1100);
+
+    }
+
   </script>
   <style>
     #test-btn {
@@ -808,8 +934,8 @@
       position: absolute;
       top: 8.8%;
       left: 2.8%;
-      width: 250px;
-      height: 350px;
+      width: 280px;
+      height: 480px;
       font-size: 1em;
       background-color: rgba(83, 104, 221, 0.5);
       z-index: 2001;
@@ -846,6 +972,19 @@
       width: 2px;
       height: 16px;
     }
+
+    #test-btn>input {
+      width: 58px;
+    }
+
+    #coord_display {
+      width: 246px;
+      height: 160px;
+    }
+
+    #coord_inputs>input {
+      width: 58px;
+    }
   </style>
 
   <div id="test-btn">
@@ -857,8 +996,18 @@
       <input id="input_x" type="number" size="5" step="0.01" placeholder="Pos X">
       <input id="input_y" type="number" size="5" step="0.01" placeholder="Pos Y">
       <input id="input_z" type="number" size="5" step="0.01" placeholder="Pos Z">
+      <hr>
+      <input id="input_rotx" type="number" size="5" step="0.01" placeholder="Rot X">
+      <input id="input_roty" type="number" size="5" step="0.01" placeholder="Rot Y">
+      <input id="input_rotz" type="number" size="5" step="0.01" placeholder="Rot Z">
     </div>
     <textarea id="coord_display" spellcheck="false"></textarea>
+    <hr>
+    <input id="input_lx" type="number" size="2" step="0.01" placeholder="LookAt X" value="18.9">
+    <input id="input_ly" type="number" size="2" step="0.01" placeholder="LookAt Y" value="-3">
+    <input id="input_lz" type="number" size="2" step="0.01" placeholder="LookAt Z" value="4.5">
+    <button onclick="testBtn05_lootat1()">=== LookAt1 ===</button>
+    <button onclick="testBtn05_lootat2()">=== LookAt2 ===</button>
   </div>
   <div id="crosshair"></div>
 </body>
