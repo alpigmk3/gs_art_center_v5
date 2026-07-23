@@ -1,0 +1,10 @@
+.venv/
+.gemini/
+.agents/
+__pycache__/
+*.bak
+.DS_Store
+Thumbs.db
+
+**/*.zip
+img/font/*.zip

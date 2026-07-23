@@ -1,0 +1,11 @@
+# 용량이 큰 압축파일 제외
+**/*.zip
+img/font/*.zip
+
+.venv/
+.gemini/
+.agents/
+__pycache__/
+*.bak
+.DS_Store
+Thumbs.db
