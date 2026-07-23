@@ -13,3 +13,6 @@ Thumbs.db
 .git/*
 .venv
 node_modules
+node_modules/
+.wrangler/
+
