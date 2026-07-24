@@ -148,33 +148,29 @@ textarea,
     margin-right: 5px;
 }
 
+/* 하단 좌측 컨트롤 패널 전체 컨테이너 */
 .custom-ui-bottom-left {
-    width: 250px;
+    width: auto;
+    /* 고정 너비 해제하여 내부 버튼 폭에 맞게 가변 조정 */
     position: absolute;
     bottom: 10px;
     left: 10px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    /* 각 줄 간의 간격을 8px로 설정 */
     align-items: flex-start;
 }
 
+/* 각 버튼 그룹 행 (1행: 좌석탐색 & 무대바라보기 / 2행: 무대변경 & OP석변경) */
 .nav-control {
-    width: 230px;
+    width: auto;
     display: flex;
-    align-items: stretch;
-    /* gap: 1px; */
+    align-items: center;
     border-right: #ffffff8c 6px solid;
+    /* 오른쪽 세로 흰색 바 유지 */
     padding-right: 8px;
 }
-
-/* 
-.nav-control .bar {
-    width: 6px;
-    background-color: rgba(255, 255, 255, 0.55);
-    margin-left: 8px;
-    flex-shrink: 0;
-} */
 
 .nav-arrow {
     padding: 0px;
@@ -182,12 +178,15 @@ textarea,
 }
 
 .nav-text {
-    padding: 4px;
-    font-size: 13px;
+    padding: 4px 8px;
+    font-size: 15px;
     font-weight: 700;
     position: relative;
-    margin: 0 -1px;
+    margin: 0 1px;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-text:hover,
@@ -205,41 +204,61 @@ textarea,
     margin-right: 1px;
 }
 
+/* 좌석선택 버튼 (1행) - 내부 요소 한 줄(row) 표시 처리 */
 #btn_seatmap {
     position: relative;
-    width: 143px;
-    height: 36px;
-    font-size: 16px;
+    width: 238px;
+    height: 44px;
+    font-size: 15px;
     font-weight: bold;
     vertical-align: middle;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    margin: 0 !important;
+    /* 좌우 이동 버튼과 딱 붙도록 설정 */
+    display: inline-flex;
+    flex-direction: row;
+    /* 세로 2줄에서 가로 1줄 배치로 변경 */
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    /* 텍스트 줄바꿈 방지 */
+    gap: 3px;
+    padding: 0 4px;
+    overflow: hidden;
 }
 
+/* 3개 주요 기능 버튼 (무대 바라보기, 무대변경, OP석 변경) 크기 완전 동일 지정 */
+#btn_stage_look,
 #btn_stage_change,
 #btn_op_change {
     position: relative;
-    width: 216px;
-    height: 36px;
-    font-size: 16px;
-    font-weight: bold;
+    width: 106px;
+    /* 3개 버튼 모두 215px로 크기 완전 동일 */
+    height: 44px;
+    /* 높이 44px 통일 */
     vertical-align: middle;
-    letter-spacing: 2px;
-    margin-right: 1px;
+    letter-spacing: 1px;
+    margin: 0;
+    margin-right: 4px;
+}
+
+#btn_stage_look {
+    margin-right: 0px;
 }
 
 #btn_seatmap_select_title {
     font-size: 16px;
     font-weight: bold;
-    display: block;
-    padding-top: 5px;
-    letter-spacing: 2px;
+    padding-top: 0px;
+    letter-spacing: 1px;
 }
 
 #btn_seatmap_text,
 #btn_seatmap_floor {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     letter-spacing: 0px;
+    display: inline-block;
 }
 
 /* 좌석선택 툴팁 말풍선 스타일 */
@@ -1780,10 +1799,12 @@ button:focus {
 
 #btn_prev_seat,
 #btn_next_seat {
-    background-size: 24px 24px !important;
+    background-size: 28px 28px !important;
+    /* 화살표 아이콘 크기도 높이 44px에 맞춰 키움 */
     padding: 0px;
-    width: 36px !important;
-    height: 36px !important;
+    width: 44px !important;
+    /* 버튼 높이와 동일하게 44px 정사각형으로 변경 */
+    height: 44px !important;
 }
 
 #home-button:hover,
@@ -1842,8 +1863,10 @@ button:focus {
 }
 
 /* Prev Seat Button: 30(Normal), 60(Hover), 100(Active) */
+/* Prev Seat Button: 좌석선택 버튼과 경계선 밀착 */
 #btn_prev_seat {
-    margin-right: 1px;
+    margin-right: 0px !important;
+    /* 오른쪽 마진을 0으로 설정하여 좌석선택 버튼에 딱 붙임 */
     background-image: url('img/03_free_move_page_ui/FMP_icon1_movL100.png') !important;
 }
 
@@ -1855,10 +1878,11 @@ button:focus {
     background-image: url('img/03_free_move_page_ui/FMP_icon1_movL100.png') !important;
 }
 
-/* Next Seat Button: 30(Normal), 60(Hover), 100(Active) */
+/* Next Seat Button: 좌석선택 버튼과 경계선 밀착 */
 #btn_next_seat {
-    margin-left: 1px;
-    margin-right: 1px;
+    margin-left: 0px !important;
+    /* 왼쪽 마진 0으로 딱 붙임 */
+    margin-right: 0px !important;
     background-image: url('img/03_free_move_page_ui/FMP_icon1_movR100.png') !important;
 }
 
