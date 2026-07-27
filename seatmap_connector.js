@@ -1,5 +1,5 @@
 
-function showUI01() {
+function initUIOnSceneReady() {
   const banner = document.getElementById('start-banner');
   const selectOverlay = document.getElementById('service-select-overlay');
   if (banner) banner.style.opacity = '0';
@@ -12,7 +12,7 @@ function showUI01() {
 const vec_LookAt = new THREE.Vector3(18.22, 12.4, 4.5);
 
 var viewer = WALK.getViewer();
-viewer.onSceneReadyToDisplay(showUI01);
+viewer.onSceneReadyToDisplay(initUIOnSceneReady);
 
 viewer.play();
 

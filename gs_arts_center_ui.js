@@ -1,7 +1,7 @@
 const vec_LookAt = new THREE.Vector3(18.9, -3, 4.5);
 
 var viewer = WALK.getViewer();
-viewer.onSceneReadyToDisplay(showUI01);
+viewer.onSceneReadyToDisplay(initUIOnSceneReady);
 viewer.play();
 // viewer.anchorsVisible = false;
 viewer.onViewSwitchStarted(() => {
@@ -15,62 +15,59 @@ viewer.helpVisible = false;
 let currentSeatViewId = null;
 let isNavigating = false;
 
-function showUI01() {
+function initUIOnSceneReady() {
   const banner = document.getElementById('start-banner');
   const selectOverlay = document.getElementById('service-select-overlay');
 
-  // 오버레이는 Z-index 180 아래 레이어에 미리 flex로 숨겨 배치
+  // =========================================================================
+  // [시퀀스 1] T = 0ms (즉시 실행): UI 오버레이 배치 및 배너 로고 페이드아웃 시작
+  // =========================================================================
+  // 오버레이 레이어 준비 (flex 스타일 적용, show 클래스 제거)
   if (selectOverlay) {
     selectOverlay.classList.remove('show');
     selectOverlay.style.display = 'flex';
   }
 
-  // 1) 즉시 배너 로고(banner-inner)만 0.5초 동안 먼저 페이드 아웃
+  // 시작 배너 로고(banner-inner) 0.5초간 페이드아웃 애니메이션 발동
   if (banner) {
     const bannerInner = banner.querySelector('.banner-inner');
     if (bannerInner) {
-      bannerInner.style.animation = 'none'; // forwards 상태 해제
-      bannerInner.offsetHeight; // 리플로우
+      bannerInner.style.animation = 'none'; // 애니메이션 상태 리셋
+      bannerInner.offsetHeight;             // 브라우저 리플로우(Reflow) 강제 실행
       bannerInner.style.transition = 'opacity 0.5s ease-in-out';
       bannerInner.style.opacity = '0';
     }
   }
 
-  // // 2) 1.2초 뒤에 배너 자체의 페이드 아웃 및 오버레이 페이드 인을 동시에 시작
-  // setTimeout(() => {
-  //   if (banner) {
-  //     // banner.style.transition = 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
-  //     banner.style.opacity = '0';
-  //   }
-  // }, 1500);
-
+  // =========================================================================
+  // [시퀀스 2] T = 1000ms (1.0초 후): 서비스 선택 오버레이 화면 페이드인 표출
+  // =========================================================================
   setTimeout(() => {
     if (selectOverlay) {
       selectOverlay.classList.add('show');
     }
   }, 1000);
 
-  // 3) 전환이 모두 종료되는 1.2초(1200ms) 시점에 배너 display 숨김
+  // =========================================================================
+  // [시퀀스 3] T = 1500ms (1.5초 후): 시작 배너 DOM 요소 숨김 (display: none)
+  // =========================================================================
   setTimeout(() => {
-    if (banner) banner.style.display = 'none';
+    if (banner) {
+      banner.style.display = 'none';
+    }
   }, 1500);
 
-  // setTimeout(() => {
-  //   let nodeNames001 = ['curtain:그룹#152']
-  //   nodeNames001.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
-  //   viewer.requestFrame();
-  // }, 1550);
-  // setTimeout(() => {
-  //   let nodeNames001 = ['curtain:그룹#152']
-  //   nodeNames001.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-  //   viewer.requestFrame();
-  // }, 1650);
-
-
-  // 초기 활성화
+  // =========================================================================
+  // [시퀀스 4] T = 1550ms (1.55초 후): 3D 무대 커튼 노드 초기화 및 씬 렌더링 갱신
+  // =========================================================================
   setTimeout(() => {
-    ['curtain:그룹#152', 'curtain_1', 'curtain_2', 'curtian_3'].forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-    viewer.requestFrame()
+    const curtainNodes = ['curtain:그룹#152', 'curtain_1', 'curtain_2', 'curtian_3'];
+    curtainNodes.forEach((name) => {
+      for (const node of viewer.findNodesOfType(name)) {
+        node.show();
+      }
+    });
+    viewer.requestFrame();
   }, 1550);
 };
 
