@@ -3,7 +3,8 @@ const vec_LookAt = new THREE.Vector3(18.9, -3, 4.5);
 var viewer = WALK.getViewer();
 viewer.onSceneReadyToDisplay(initUIOnSceneReady);
 viewer.play();
-// viewer.anchorsVisible = false;
+viewer.anchorsVisible = false;
+
 viewer.onViewSwitchStarted(() => {
   if (!isNavigating) {
     reset_btn_seatmap();
