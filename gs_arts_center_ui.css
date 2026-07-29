@@ -10,8 +10,6 @@ textarea,
 .section-btn,
 .nav-text,
 .seat-btn,
-#start-banner,
-#service-select-overlay,
 #manual-ui-overlay {
     font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif !important;
 }
@@ -1003,10 +1001,15 @@ textarea,
     justify-content: center;
     align-items: center;
     background-color: #ffffff;
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.8s ease-in-out;
     font-family: 'Manrope', sans-serif;
     padding: 16px;
     box-sizing: border-box;
+}
+
+#start-banner.hide {
+    opacity: 0;
+    pointer-events: none;
 }
 
 #start-banner .banner-inner {
@@ -1140,36 +1143,6 @@ textarea,
     transform: scale(0.95);
 }
 
-
-
-#service-select-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 200;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background: transparent; */
-    background-color: rgba(255, 255, 255, 0.67);
-    backdrop-filter: blur(6px);
-    font-family: 'Manrope', sans-serif;
-    padding: 16px;
-    box-sizing: border-box;
-    /* animation: overlayFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; */
-    transition: opacity 0.55s ease, visibility 0.55s ease;
-    opacity: 0;
-    visibility: hidden;
-}
-
-#service-select-overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-
 @keyframes overlayFadeIn {
     from {
         opacity: 0;
@@ -1220,76 +1193,6 @@ textarea,
     display: block;
     border-radius: 0;
 }
-
-.service-select-footer {
-    display: flex;
-    gap: 24px;
-    width: 100%;
-    justify-content: center;
-    box-sizing: border-box;
-}
-
-.ssp-card-btn {
-    flex: 1;
-    background: rgb(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 0;
-    padding: 60px 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-align: left;
-    color: #ffffff;
-    outline: none;
-    font-family: inherit;
-}
-
-.ssp-card-btn:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: #ffffff;
-    transform: translateY(-6px);
-}
-
-.ssp-card-btn:active {
-    background: rgb(0, 0, 0);
-    transform: translateY(-2px);
-}
-
-.ssp-card-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.ssp-card-desc-container {
-    display: flex;
-    align-items: stretch;
-    gap: 16px;
-    width: 100%;
-}
-
-.ssp-card-line {
-    width: 6px;
-    background-color: #FFFFFF;
-    flex-shrink: 0;
-}
-
-.ssp-card-desc {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #ffffff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-
-
 
 
 /* STAGE & OP Box outlines for 1F */
@@ -2349,26 +2252,6 @@ svg rect[id^="View_"].selected-active {
         max-width: min(100%, calc(35vh * 3.245));
     }
 
-    .service-select-footer {
-        flex-direction: column;
-        gap: 16px;
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
-    }
-
-    .ssp-card-btn {
-        padding: 20px 24px;
-    }
-
-    .ssp-card-title {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-
-    .ssp-card-desc {
-        font-size: 12px;
-    }
 
     .manual-ui-card {
         top: 8px;

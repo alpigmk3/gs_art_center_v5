@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Interactive 3D walkthrough">
+
+  <link rel="icon" href="2026-07-28-18-04-07/favicon.ico">
+
+  <meta property="og:image" content="2026-07-28-18-04-07/thumbnail.jpg" />
+
+  <link href="2026-07-28-18-04-07/webwalk/style.css" rel="stylesheet" type="text/css">
+
+  <style>
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Open Sans'), local('OpenSans'),
+      url('2026-07-28-18-04-07/webwalk/font/open-sans-v28-vietnamese_latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url('2026-07-28-18-04-07/webwalk/font/open-sans-v28-vietnamese_latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
+
+    /* Original font awesome font-family names have been replaced to not rely on
+       font-weight when determining actual symbol, as it didn't work well
+       when rendering using 2D canvas features, and also to avoid spaces in
+       the names. */
+
+    @font-face {
+      font-family: 'FontAwesomeBrands';
+      src: url("2026-07-28-18-04-07/webwalk/font/fa-brands-400.woff2") format("woff2"),
+           url("2026-07-28-18-04-07/webwalk/font/fa-brands-400.woff") format("woff"); }
+
+    @font-face {
+      font-family: 'FontAwesomeRegular';
+      src: url("2026-07-28-18-04-07/webwalk/font/fa-regular-400.woff2") format("woff2"),
+           url("2026-07-28-18-04-07/webwalk/font/fa-regular-400.woff") format("woff"); }
+
+    @font-face {
+      font-family: 'FontAwesomeSolid';
+      src: url("2026-07-28-18-04-07/webwalk/font/fa-solid-900.woff2") format("woff2"),
+           url("2026-07-28-18-04-07/webwalk/font/fa-solid-900.woff") format("woff"); }
+
+    #cover-image {
+      background-image: url("2026-07-28-18-04-07/cover.jpg");
+    }
+
+    .ext-popup-close-button {
+      background-image: url("2026-07-28-18-04-07/webwalk/img/close.svg");
+    }
+  </style>
+
+  <title>3D scene</title>
+</head>
+
+<body>
+  <noscript>
+    <div class="message error-message absolute-center">
+      Explore this interactive 3D walkthrough on desktop and mobile
+      devices or with a Virtual Reality headset. To start the virtual
+      tour just click the play button. You don't need to install any
+      application, but you need to enable JavaScript in your browser.
+    </div>
+  </noscript>
+
+  <div id="cover-image">
+  </div>
+
+  <!-- tabindex allows to give the canvas keyboard focus with a
+         focus() function -->
+  <canvas id="walk-canvas" tabindex="-1">
+  </canvas>
+
+  <div id="info-message" class="message info-message" style="display: none">
+  </div>
+
+  <div id="error-message" class="message error-message absolute-center"
+       style="display: none">
+  </div>
+
+  <!-- Error messages in old IEs can not be shown from JS, because old
+       IEs fail to parse new JS constructs -->
+  <!--[if lte IE 9]>
+      <div class="message error-message absolute-center">
+        Old versions of the Internet Explorer browser do not support
+        <a href="https://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation"
+           target="_blank">
+          WebGL</a>.
+        <br/>
+        <a href="https://get.webgl.org/" target="_blank">
+          Find out how to get it.</a>
+      </div>
+  <![endif]-->
+
+  <div id="info-bar" class="ui-top ui-left">
+    <div id="info-bar-slide">
+      <a id="author-logo" class="info-item ui-panel"
+         style="display: none"
+         target="_blank">
+        <img>
+      </a><!-- NS = no spaces
+   --><div id="info-text" class="info-item ui-panel" style="display: none">
+        <div>
+          <div id="info-title"></div>
+        </div>
+        <div>
+          <a id="info-author" target="_blank"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="menu-bar" class="ui-bottom ui-right">
+    <div id="menu-bar-slide">
+      <div id="menu-bar-folder" class="menu-item ui-hoverable ui-panel"
+           style="display: none">
+        <img src="2026-07-28-18-04-07/webwalk/img/fold-horizontal.svg">
+      </div><!-- NS
+   --><div id="menu-bar-content">
+        <div id="menu-buttons" style="display: none">
+          <div id="help-button"
+               class="menu-button menu-item ui-hoverable ui-panel">
+            ?
+          </div><!-- NS
+       --><div id="minimap-button-toggle"
+               class="menu-button menu-item ui-hoverable ui-panel"
+               style="display:none">
+            <img src="2026-07-28-18-04-07/webwalk/img/map.svg">
+          </div><!-- NS
+       --><div id="tour-button"
+               class="menu-button menu-item ui-hoverable ui-panel"
+               style="display: none">
+            <img src="2026-07-28-18-04-07/webwalk/img/tour.svg">
+          </div><!-- NS
+       --><div id="vr-button"
+               class="vr-specific menu-button menu-item ui-hoverable ui-panel"
+               style="display: none">
+            VR
+          </div><!-- NS
+       --><div id="fullscreen-button"
+               class="fullscreen-specific menu-button menu-item ui-hoverable
+                      ui-panel"
+               style="display: none">
+            <img src="2026-07-28-18-04-07/webwalk/img/fullscreen.svg">
+          </div>
+        </div><!-- NS
+     --><a id="engine-logo" class="menu-item ui-panel" style="display: none"
+           href="https://www.shapespark.com" target="_blank">
+          <div id="engine-logo-text" style="display: none"></div><!-- NS
+       --><img src="2026-07-28-18-04-07/webwalk/img/shapespark-logo.svg">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-list" class="ui-top ui-right" style="display: none">
+    <div id="view-list-slide">
+      <div id="view-list-items" class="ui-scrollbar">
+        <div class="view ui-hoverable ui-panel"></div>
+      </div>
+      <div id="view-list-folder" class="ui-folder-vertical ui-hoverable ui-panel">
+        <img src="2026-07-28-18-04-07/webwalk/img/fold-vertical.svg">
+      </div>
+    </div>
+  </div>
+
+  <div id="minimap-container" class="minimap-container-default" style="display: none">
+    <div id="minimap-wrapper" class="minimap-wrapper-default">
+      <div id="minimap-button-close" class="minimap-button minimap-button-close">
+        <img src="2026-07-28-18-04-07/webwalk/img/close.svg">
+      </div>
+      <div id="minimap-button-minimize" class="minimap-button minimap-button-minimize">
+        <img src="2026-07-28-18-04-07/webwalk/img/minimize.svg">
+      </div>
+      <div id="minimap-button-maximize" class="minimap-button minimap-button-maximize">
+        <img src="2026-07-28-18-04-07/webwalk/img/maximize.svg">
+      </div>
+      <div id="minimap-content-wrapper" class="minimap-content-wrapper">
+        <div id="minimap-content" class="minimap-content"></div>
+      </div>
+      <div id="minimap-tabs" class="minimap-tabs-default" style="display: none"></div>
+    </div>
+  </div>
+
+  <div id="view-mode" class="ui-top ui-center" style="display: none">
+    <div id="view-mode-slide">
+      <div class="view-mode-container">
+        <div id="view-mode-top"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-top.svg">
+        </div>
+        <div id="view-mode-front"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-front.svg">
+        </div>
+        <div id="view-mode-left"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-left.svg">
+        </div>
+        <div id="view-mode-fps"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-fps.svg">
+        </div>
+      </div>
+      <div class="view-mode-container">
+        <div id="view-mode-persp"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-persp.svg">
+        </div>
+        <div id="view-mode-ortho"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-ortho.svg">
+        </div>
+      </div>
+      <div class="view-mode-container">
+        <div id="view-mode-color"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-color.svg">
+        </div>
+        <div id="view-mode-wireframe-opaque"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-wireframe-opaque.svg">
+        </div>
+        <div id="view-mode-wireframe-transparent"
+             class="menu-item view-mode-item ui-hoverable ui-panel">
+          <img src="2026-07-28-18-04-07/webwalk/img/view-mode-wireframe-transparent.svg">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <img id="play-button" class="absolute-center" src="2026-07-28-18-04-07/webwalk/img/play.svg"
+       style="display: none">
+
+  <div id='interaction-prompt' class="ui-all-center ui-panel" style="display: none">
+    <div class='interaction-prompt-icon'>
+      <img class='interaction-prompt-icon-idle interaction-prompt-desktop' src="2026-07-28-18-04-07/webwalk/img/pointer.svg"/>
+      <img class='interaction-prompt-icon-pressed interaction-prompt-desktop' src="2026-07-28-18-04-07/webwalk/img/pointer-pressed.svg"/>
+      <img class='interaction-prompt-icon-idle interaction-prompt-mobile' src="2026-07-28-18-04-07/webwalk/img/hand.svg"/>
+      <img class='interaction-prompt-icon-pressed interaction-prompt-mobile' src="2026-07-28-18-04-07/webwalk/img/hand-pressed.svg"/>
+    </div>
+    <div data-strings="help.interactiveDesktop" class='interaction-prompt-indicator-text interaction-prompt-desktop'></div>
+    <div data-strings="help.interactiveMobile" class='interaction-prompt-indicator-text interaction-prompt-mobile'></div>
+  </div>
+
+  <!-- When the help is to be shown automatically during load (#help
+       hash), it is displayed above the primary progress indicator.
+       help-and-primary-progress is a wrapper for these two elements that
+       helps to lay them out consistently. -->
+  <div id="help-and-primary-progress" class="absolute-center">
+
+    <div id="desktop-help" class="help ui-panel" style="display: none">
+      <img id="close-desktop-help-button"
+           class="close-help-button ui-close-hoverable"
+           src="2026-07-28-18-04-07/webwalk/img/close.svg">
+      <div id="desktop-help-switch">
+        <div data-strings="help.basic" id="basic-desktop-help-option">
+        </div><!-- NS = no spaces
+     --><div data-strings="help.advanced" id="advanced-desktop-help-option">
+        </div>
+      </div>
+
+      <div id="desktop-help-content">
+
+        <div id="desktop-basic-help" class="help-columns" style="display: none">
+          <div class="help-column3">
+            <h1 data-strings="help.mouse"></h1>
+            <img src="2026-07-28-18-04-07/webwalk/img/mouse-controls.svg">
+          </div><!-- NS
+       --><div class="help-column3-sep"></div><!-- NS
+       --><div class="help-column3">
+            <h1 data-strings="help.keyboard"></h1>
+            <img src="2026-07-28-18-04-07/webwalk/img/keyboard-controls.svg">
+          </div><!-- NS
+       --><div class="help-column3-sep"></div><!-- NS
+       --><div class="help-column3">
+            <h1 data-strings="help.vrTeleport"></h1>
+            <img src="2026-07-28-18-04-07/webwalk/img/vr-controls.svg">
+          </div>
+        </div>
+
+        <div id="advanced-desktop-help" style="display: none">
+          <h1 data-strings="help.mouse"></h1>
+          <div>
+            <div class="help-how" data-strings="help.holdLeftButton">
+            </div><!-- NS
+         --><div data-strings="help.lookAround" class="help-what"></div>
+          </div>
+          <div>
+            <div class="help-how" data-strings="help.clickLeftButton">
+            </div><!-- NS
+         --><div data-strings="help.walkToClickedPlace" class="viewer-specific help-what">
+            </div><!-- NS
+         --><div data-strings="help.selectMaterialLightObject"
+              class="editor-specific help-what" style="display: none">
+            </div>
+          </div>
+          <div>
+            <div class="help-how" data-strings="help.scroll" ></div><!-- NS
+         --><div data-strings="help.walkStraight" class="help-what"></div>
+          </div>
+          <h1 data-strings="help.keyboard"></h1>
+          <div>
+            <div class="help-how">
+              <div>
+                <div class="help-key-placeholder"></div><!-- NS
+             --><div class="help-key">&#8593;</div><!-- NS
+             --><div class="help-key-placeholder"></div>
+              </div>
+              <div>
+                <div class="help-key">&#8592;</div><!-- NS
+             --><div class="help-key">&#8595;</div><!-- NS
+             --><div class="help-key">&#8594;</div>
+              </div>
+            </div><!-- NS
+         --><div data-strings="help.walkStraightAndLookAround" class="help-what">
+            </div>
+          </div>
+          <div>
+            <div class="help-how">
+              <div>
+                <div class="help-key-placeholder"></div><!-- NS
+             --><div class="help-key">W</div><!-- NS
+             --><div class="help-key-placeholder"></div>
+              </div>
+              <div>
+                <div class="help-key">A</div><!-- NS
+             --><div class="help-key">S</div><!-- NS
+             --><div class="help-key">D</div>
+              </div>
+            </div><!-- NS
+         --><div data-strings="help.walkStraightAndSideways" class="help-what"></div>
+          </div>
+          <div>
+            <div class="help-how">
+              <div class="help-key">PgUp</div><div class="help-key">PgDn</div><!-- NS
+           --><div class="help-key-sep"></div><!-- NS
+           --><div class="help-key">E</div><div class="help-key">Q</div>
+            </div><!-- NS
+         --><div data-strings="help.changeHeight" class="help-what"></div>
+          </div>
+          <div>
+            <div class="help-how">
+              <div class="help-key">1</div>
+              &#8211;
+              <div class="help-key">9</div><!-- NS
+           --><div class="help-key-sep"></div><!-- NS
+           --><div class="help-key">[</div>
+              <div class="help-key">]</div>
+            </div><!-- NS
+       --><div data-strings="help.switchView" class="help-what"></div>
+          </div>
+          <div class="help-how">
+            <div class="help-key">P</div>
+          </div><!-- NS
+       --><div data-strings="help.screenshot" class="help-what"></div>
+          <div class="editor-specific help-how" style="display: none">
+            <div class="help-key">I</div>
+          </div><!-- NS
+       --><div data-strings="help.illuminationPreview" class="editor-specific help-what"
+               style="display: none"></div>
+          <div class="help-how">
+            <div class="help-key">M</div>
+          </div><!-- NS
+       --><div data-strings="help.hideShowMenu" class="help-what"></div>
+          <div class="help-how">
+            <div class="help-key">L</div>
+          </div><!-- NS
+       --><div data-strings="help.hideShowMousePointer" class="help-what"></div>
+
+          <h1 data-strings="help.vrMode"></h1>
+          <div>
+            <div class="help-how">
+              <div data-strings="help.gazeAtFixedPlace"></div>
+              <div data-strings="help.or"></div>
+              <div data-strings="help.clickControllerButton">
+              </div>
+            </div><!-- NS
+         --><div data-strings="help.teleport" class="help-what"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobile-help" class="help ui-panel"
+         style="display: none">
+      <img id="close-mobile-help-button"
+           class="close-help-button ui-close-hoverable"
+           src="2026-07-28-18-04-07/webwalk/img/close.svg">
+      <div class="help-columns">
+        <div class="help-column2">
+          <h1 data-strings="help.touch"></h1>
+          <img src="2026-07-28-18-04-07/webwalk/img/touch-controls.svg">
+        </div><!-- NS
+     --><div class="help-column2-sep"></div><!-- NS
+     --><div class="navigation-help-column2">
+          <h1 data-strings="help.vrTeleport"></h1>
+          <img src="2026-07-28-18-04-07/webwalk/img/vr-controls.svg">
+        </div>
+      </div>
+    </div>
+
+    <svg id="primary-progress" viewBox="-58 -58 116 116"
+         style="display: none">
+      <circle cx="0" cy="0" r="50" stroke-width="14">
+      </circle>
+      <circle id="primary-progress-done" cx="0" cy="0" r="50"
+              stroke-width="8" stroke-dasharray="315.159"
+              stroke-dashoffset="314.159" transform="rotate(-90)">
+      </circle>
+    </svg>
+
+  </div>
+
+  <div id="secondary-progress" style="display: none">
+    <div id="secondary-progress-done"></div>
+  </div>
+
+  <div id="ext-html-label"
+       class="ext-popup ui-top ui-left ext-html-label-animated"
+       style="display: none">
+    <div id="ext-html-label-content" class="ext-popup-content"></div><!-- NS
+ --><div id="ext-html-label-close"
+         class="ext-popup-close-button-panel ui-close-hoverable">
+      <div class="ext-popup-close-button"></div>
+    </div>
+  </div>
+
+  <div id="ext-meeting-status" class="ext-popup ui-top ui-left"
+       style="display: none">
+    <div id="ext-meeting-status-content" class="ext-popup-content">
+      <ul id="ext-meeting-who-list" class="ui-scrollbar ext-meeting-who-list">
+      </ul>
+      <div>
+        <button id="ext-meeting-mic-toggle"
+                class="ext-meeting-button ext-meeting-button-highlight">
+          <span class="fa-microphone" style="display: none"></span>
+          <span class="fa-microphone-slash"></span>
+        </button>
+        <button id="ext-meeting-camera-toggle"
+                class="ext-meeting-button ext-meeting-button-highlight">
+          <span class="fa-video" style="display: none"></span>
+          <span class="fa-video-slash"></span>
+        </button>
+        <button id="ext-meeting-pointer" class="ext-meeting-button">
+          <span class="fa-hand-pointer"></span>
+        </button>
+      </div>
+      <div id="ext-meeting-notes-preview" style="display: none">
+        <strong>Notes:</strong>
+        <ul id="ext-meeting-note-list" class="ext-meeting-list">
+        </ul>
+        <button id="ext-meeting-add-note" class="ext-meeting-button">
+          Add note
+        </button>
+      </div>
+      <div id="ext-meeting-status-footer">
+        <span id = ext-meeting-quality-indicator-container>
+        </span>
+        <span>
+          <button id="ext-meeting-leave"
+                  class="ext-meeting-button ext-meeting-button-highlight"
+                  data-strings="meetings.leaveMeeting">
+          </button>
+        </span>
+      </div>
+    </div>
+    <div id="ext-meeting-who-list-folder" class="ui-folder-vertical ui-hoverable ui-panel">
+      <img src="2026-07-28-18-04-07/webwalk/img/fold-vertical.svg">
+    </div>
+  </div>
+  <div id="ext-meeting-camera-preview" style="display: none"></div>
+  
+  
+  
+  
+  
+  <script type="module">
+    WALK.ASSETS_URL = '2026-07-28-18-04-07/';
+  </script>
+<script src="2026-07-28-18-04-07/webwalk/walk.min.js" type="text/javascript"></script>
+
+
+
+
+  <script>
+var viewer = WALK.getViewer();
+	
+    // let nodeNames01 = ['curtian_3:그룹#30']
+    // const nodeNames02 = ['curtain_2:그룹#28']
+    // const nodeNames03 = ['curtain_1:그룹#141']
+    // const nodeNames = ['curtain_1:그룹#141', 'curtain_2:그룹#28', 'curtian_3:그룹#30']
+
+    var stage_change_onoff = true;
+    var stage_change_isplaying = false;
+    function testBtn01() {
+      if (stage_change_isplaying) return;
+
+      stage_change_isplaying = true;
+
+      if (stage_change_onoff == true) {
+        nodeNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
+        viewer.requestFrame()
+
+        setTimeout(() => {
+          nodeNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
+          viewer.requestFrame();
+
+          setTimeout(() => {
+            nodeNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
+            viewer.requestFrame()
+            stage_change_onoff = false;
+            stage_change_isplaying = false;
+          }, 550);
+        }, 550);
+
+
+
+      } else {
+        // nodeNames.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+        // viewer.requestFrame()
+        // stage_change_step = 0
+
+        nodeNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+        viewer.requestFrame()
+
+        setTimeout(() => {
+          nodeNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+          viewer.requestFrame();
+
+          setTimeout(() => {
+            nodeNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+            viewer.requestFrame()
+            stage_change_onoff = true;
+            stage_change_isplaying = false;
+          }, 550);
+        }, 550);
+
+
+      }
+    }
+    function testBtn02() {
+      var viewer = WALK.getViewer();
+      var vpos = viewer.getCameraPosition();
+      var vrot = viewer.getCameraRotation();
+      var vec3_rot = vrot.toVector3()
+
+      var display = document.getElementById('coord_display');
+
+      let lpx = parseFloat(vpos.x).toFixed(2);
+      let lpy = parseFloat(vpos.y).toFixed(2);
+      let lpz = parseFloat(vpos.z).toFixed(2);
+
+      let lrx = parseFloat(vec3_rot.x).toFixed(2);
+      let lry = parseFloat(vec3_rot.y).toFixed(2);
+      let lrz = parseFloat(vec3_rot.z).toFixed(2);
+
+      display.value = display.value + `\n"X": ${lpx},"Y": ${lpy},"Z": ${lpz},\n"X": ${lrx},"Y": ${lry},"Z": ${lrz},\n`;
+
+      document.getElementById('input_x').value = lpx;
+      document.getElementById('input_y').value = lpy;
+      document.getElementById('input_z').value = lpz;
+      document.getElementById('input_rotx').value = lrx;
+      document.getElementById('input_roty').value = lry;
+      document.getElementById('input_rotz').value = lrz;
+    }
+
+    function testBtn03() {
+      const x = parseFloat(document.getElementById('input_x').value) || 0;
+      const y = parseFloat(document.getElementById('input_y').value) || 0;
+      const z = parseFloat(document.getElementById('input_z').value) || 0;
+      const rx = parseFloat(document.getElementById('input_rotx').value) || 0;
+      const ry = parseFloat(document.getElementById('input_roty').value) || 0;
+      const rz = parseFloat(document.getElementById('input_rotz').value) || 0;
+
+      var pos = viewer.getCameraPosition();
+      var rot = viewer.getCameraRotation();
+      var view = new WALK.View();
+      view.rotation.yawDeg = rot.yawDeg;
+      view.rotation.pitchDeg = rot.pitchDeg;
+
+      view.position.x = x;
+      view.position.y = y;
+      view.position.z = z;
+
+      view.rotation.x = rx;
+      view.rotation.y = ry;
+      view.rotation.z = rz;
+
+      viewer.switchToView(view);
+    }
+
+    function testBtn04_NodeType() {
+      viewer.onNodeTypeClicked(function (node, position, distance) {
+        var nodeTypePath = [];
+        while (node) {
+          nodeTypePath.push(node.type);
+          node = node.parent;
+        }
+        viewer.openPopup(
+          '<div style="font-size: 1.5em">' +
+          '  Clicked nodes: ' + nodeTypePath.join(' > ') + '<br/>' +
+          '  Click distance: ' + distance.toFixed(2) + ' m' +
+          '</div>'
+        )
+        return true;
+      });
+    }
+
+    function testBtn05_lootat1() {
+      let lx = parseFloat(document.getElementById('input_lx').value) || 0;
+      let ly = parseFloat(document.getElementById('input_ly').value) || 0;
+      let lz = parseFloat(document.getElementById('input_lz').value) || 0;
+
+      let vec_LookAt2 = new THREE.Vector3(lx, ly, lz);
+
+      //var viewer = WALK.getViewer();
+      var pos = viewer.getCameraPosition();
+      //var display = document.getElementById('coord_display');
+      let lpx = parseFloat(pos.x).toFixed(2);
+      let lpy = parseFloat(pos.y).toFixed(2);
+      let lpz = parseFloat(pos.z).toFixed(2);
+
+      document.getElementById('input_x').value = lpx;
+      document.getElementById('input_y').value = lpy;
+      document.getElementById('input_z').value = lpz;
+
+      var view = new WALK.View();
+      view.position = pos;
+
+      const m = new THREE.Matrix4();
+      m.lookAt(view.position, vec_LookAt2, new THREE.Vector3(0, 0, 1));
+      let ves = new THREE.Euler();
+      ves.setFromRotationMatrix(m, 'ZYX');
+
+
+      console.log("view.position", view.position);
+      console.log("vec_LookAt2", vec_LookAt2);
+
+      const euler = new THREE.Euler().setFromRotationMatrix(m, 'ZXY');
+      console.log("Yaw (Rad):", euler.z);
+      console.log("Pitch (Rad):", euler.x);
+      console.log("Roll (Rad):", euler.y);
+      console.log("ves", ves);
+
+      //view.rotation.z = ves.z;
+      view.rotation.yaw = euler.z;      // Z축 회전량 (수평 회전 = Yaw)
+      view.rotation.pitch = euler.x;
+
+    }
+
+    function testBtn05_lootat2() {
+      if (isNavigating) return;
+
+      let lx = parseFloat(document.getElementById('input_lx').value) || 0;
+      let ly = parseFloat(document.getElementById('input_ly').value) || 0;
+      let lz = parseFloat(document.getElementById('input_lz').value) || 0;
+
+      let vec_LookAt2 = new THREE.Vector3(lx, ly, lz);
+
+      //var viewer = WALK.getViewer();
+      var pos = viewer.getCameraPosition();
+      //var display = document.getElementById('coord_display');
+      let lpx = parseFloat(pos.x).toFixed(2);
+      let lpy = parseFloat(pos.y).toFixed(2);
+      let lpz = parseFloat(pos.z).toFixed(2);
+
+      document.getElementById('input_x').value = lpx;
+      document.getElementById('input_y').value = lpy;
+      document.getElementById('input_z').value = lpz;
+
+      var view = new WALK.View();
+      view.position = pos;
+
+
+      const m = new THREE.Matrix4();
+      m.lookAt(view.position, vec_LookAt2, new THREE.Vector3(0, 0, 1));
+      let ves = new THREE.Euler();
+      ves.setFromRotationMatrix(m, 'ZYX');
+      //const euler = new THREE.Euler().setFromRotationMatrix(m, 'ZXY');
+      console.log("ves", ves);
+
+      //view.rotation.z = ves.z;  // Z축 회전량 (수평 회전 = Yaw)
+
+      // 1. 카메라에서 바라볼 목표점(vec_LookAt)까지의 상대 거리 벡터 계산
+      var dx = vec_LookAt2.x - view.position.x;
+      var dy = vec_LookAt2.y - view.position.y;
+      var dz = vec_LookAt2.z - view.position.z;
+
+      // 2. 수평 거리(바닥면 거리) 계산
+      var horizontalDistance = Math.sqrt(dx * dx + dy * dy);
+
+      // 3. 삼각함수를 통한 정확한 Yaw 및 Pitch 값 추출
+      // Shapespark 좌표계 기준에 맞춘 아크탄젠트/아크사인 계산
+      //view.rotation.yaw = Math.atan2(dy, dx);
+      view.rotation.yaw = ves.z;
+      view.rotation.pitch = Math.atan2(dz, horizontalDistance); // 높이차(dz)와 수평거리 비율로 피치 계산
+
+      // 4. 만약 여전히 반대로 뒤집혀 보인다면 아래 주석을 풀고 조절해 보세요
+      // view.rotation.pitch = -Math.atan2(dz, horizontalDistance); 
+
+      isNavigating = true;
+      viewer.switchToView(view);
+      viewer.requestFrame();
+
+      setTimeout(() => {
+        isNavigating = false;
+      }, 1100);
+
+    }
+
+
+	function testBtn_nodeon(){
+		var input_node = document.getElementById('input_node').value;
+		
+		var nodeName001 = [input_node.toString()];
+        nodeName001.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
+        viewer.requestFrame()
+	}
+	function testBtn_nodeoff(){
+		var input_node = document.getElementById('input_node').value;
+		
+		var nodeName001 = [input_node.toString()];
+        nodeName001.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
+        viewer.requestFrame()
+	}
+  </script>
+  <style>
+    #test-btn {
+      transition: all .3s ease;
+      position: absolute;
+      top: 8.8%;
+      left: 2.8%;
+      width: 280px;
+      height: 480px;
+      font-size: 1em;
+      background-color: rgba(83, 104, 221, 0.5);
+      z-index: 2001;
+    }
+
+    #crosshair {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      pointer-events: none;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #crosshair::before,
+    #crosshair::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+    }
+
+    #crosshair::before {
+      width: 16px;
+      height: 2px;
+    }
+
+    #crosshair::after {
+      width: 2px;
+      height: 16px;
+    }
+
+    #test-btn>input[type="number"] {
+      width: 58px;
+    }
+
+    #coord_display {
+      width: 246px;
+      height: 160px;
+    }
+
+    #coord_inputs>input {
+      width: 58px;
+    }
+	
+	#input_node {width: 246px;}
+  </style>
+
+  <div id="test-btn">
+  
+	<input id="input_node" type="text" placeholder="node">
+    <button onclick="testBtn_nodeon()">== node on ===</button>
+    <button onclick="testBtn_nodeoff()">== node off ===</button>
+	<hr>
+
+    <button onclick="testBtn02()">== 좌표 xyz ===</button>
+    <button onclick="testBtn03()">== 좌표 이동 ===</button>
+    <button onclick="testBtn04_NodeType()">== 노드 확인 ===</button>
+    <div id="coord_inputs">
+      <input id="input_x" type="number" size="5" step="0.01" placeholder="Pos X">
+      <input id="input_y" type="number" size="5" step="0.01" placeholder="Pos Y">
+      <input id="input_z" type="number" size="5" step="0.01" placeholder="Pos Z">
+      <hr>
+      <input id="input_rotx" type="number" size="5" step="0.01" placeholder="Rot X">
+      <input id="input_roty" type="number" size="5" step="0.01" placeholder="Rot Y">
+      <input id="input_rotz" type="number" size="5" step="0.01" placeholder="Rot Z">
+    </div>
+    <textarea id="coord_display" spellcheck="false"></textarea>
+    <hr>
+    <input id="input_lx" type="number" size="2" step="0.01" placeholder="LookAt X" value="18.9">
+    <input id="input_ly" type="number" size="2" step="0.01" placeholder="LookAt Y" value="-3">
+    <input id="input_lz" type="number" size="2" step="0.01" placeholder="LookAt Z" value="4.5">
+    <button onclick="testBtn05_lootat1()">=== LookAt1 ===</button>
+    <button onclick="testBtn05_lootat2()">=== LookAt2 ===</button>
+  </div>
+  
+  
+</body>
+</html>

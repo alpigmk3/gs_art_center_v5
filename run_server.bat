@@ -3,7 +3,7 @@ title GS Art Center v4 Local Web Server
 echo =======================================================
 echo   GS Art Center v4 3D Seat Sight Local Server Starting
 echo =======================================================
-echo.
+echo.  python -m http.server 8080 
 echo  * Target Directory: %~dp0
 echo  * Local URL: http://localhost:8082/index.html
 echo.
