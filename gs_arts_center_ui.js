@@ -1,16 +1,15 @@
-const vec_LookAt = new THREE.Vector3(18.9, -3, 4.5);
+const vec_LookAt = new THREE.Vector3(18.97, 10.2, 0.7);
 
 var viewer = WALK.getViewer();
 viewer.onSceneReadyToDisplay(initUIOnSceneReady);
 viewer.play();
-viewer.anchorsVisible = false;
-
 viewer.onViewSwitchStarted(() => {
   if (!isNavigating) {
     reset_btn_seatmap();
   }
 });
 
+viewer.anchorsVisible = false;
 viewer.menuVisible = true;
 viewer.helpVisible = false;
 let currentSeatViewId = null;
@@ -48,6 +47,7 @@ function initUIOnSceneReady() {
     if (banner) {
       banner.style.display = 'none';
     }
+    btn_seatmap_open();
   }, 1500);
 
   // =========================================================================
@@ -132,16 +132,29 @@ function btn_stage_look() {
 }
 
 
+const btnSeatmap = document.getElementById('btn_seatmap');
+const seatmapOverlay = document.getElementById('seatmap-overlay');
+const seatmapCloseButton = document.getElementById('seatmap-close-button');
+const btn_menu_bar_folder = document.getElementById('menu-bar-folder');
+
+function btn_seatmap_open() {
+  seatmapOverlay.classList.add('active');
+  reset_seatmap();
+  hideCustomUI();
+  if (window.setZoomLevel) window.setZoomLevel(0, true);
+  if (viewer._autoTour.isRunning() == true) {
+    viewer._autoTour.stop();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
-  function btnSeatmapClose() {
-    const seatmapOverlay = document.getElementById('seatmap-overlay');
+  function btnSeatmap_close() {
     if (seatmapOverlay) seatmapOverlay.classList.remove('active');
-
     // 라인 이미지 및 구역 선택 상태 모두 초기화
-    hideAllZoneLines();
     sectionButtons.forEach(sb => sb.classList.remove('active'));
     reset_btn_seatmap();
+    hideAllZoneLines();
   }
 
   function showViewId(viewId) {
@@ -215,11 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const btnSeatmap = document.getElementById('btn_seatmap');
-  const seatmapOverlay = document.getElementById('seatmap-overlay');
-  const seatmapCloseButton = document.getElementById('seatmap-close-button');
-  const btn_menu_bar_folder = document.getElementById('menu-bar-folder');
-
   if (btnSeatmap && seatmapOverlay && seatmapCloseButton && btn_menu_bar_folder) {
 
     btn_menu_bar_folder.addEventListener('click', () => {
@@ -227,25 +235,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     seatmapCloseButton.addEventListener('click', () => {
-      btnSeatmapClose();
+      btnSeatmap_close();
     });
 
     btnSeatmap.addEventListener('click', () => {
-      seatmapOverlay.classList.add('active');
-      reset_seatmap();
-      hideCustomUI();
-      if (window.setZoomLevel) window.setZoomLevel(0, true);
-      if (viewer._autoTour.isRunning() == true) {
-        viewer._autoTour.stop();
-      }
+      btn_seatmap_open();
     });
+
 
     // Close when clicking outside the popup
     seatmapOverlay.addEventListener('click', (e) => {
       if (e.target === seatmapOverlay) {
         //seatmapOverlay.classList.remove('active');
         //reset_btn_seatmap();
-        btnSeatmapClose();
+        btnSeatmap_close();
       }
     });
   }
@@ -518,8 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'C': "seatmap_3f_line_c"
     }
   };
-
-  const hideAllZoneLines = () => {
+  function hideAllZoneLines() {
     for (const floor in zoneLines) {
       for (const zone in zoneLines[floor]) {
         const img = document.getElementById(zoneLines[floor][zone]);
@@ -675,7 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // const seatmapOverlay = document.getElementById('seatmap-overlay');
       // if (seatmapOverlay) seatmapOverlay.classList.remove('active');
       // reset_btn_seatmap();
-      btnSeatmapClose();
+      btnSeatmap_close();
     }
   });
 });
@@ -699,21 +701,19 @@ function toogle_menu_bar() {
   }
 }
 
-window.hideCustomUI = function () {
-  const topLeft = document.querySelector('.custom-ui-top-left');
-  const bottomLeft = document.querySelector('.custom-ui-bottom-left');
 
+const topLeft = document.querySelector('.custom-ui-top-left');
+const bottomLeft = document.querySelector('.custom-ui-bottom-left');
+
+function hideCustomUI() {
   if (topLeft) topLeft.classList.add('hide-ani');
   if (bottomLeft) bottomLeft.classList.add('hide-ani');
   setTimeout(() => {
     viewer.menuVisible = false;
   }, 100);
-
 };
 
-window.showCustomUI = function () {
-  const topLeft = document.querySelector('.custom-ui-top-left');
-  const bottomLeft = document.querySelector('.custom-ui-bottom-left');
+function showCustomUI() {
   if (topLeft) topLeft.classList.remove('hide-ani');
   if (bottomLeft) bottomLeft.classList.remove('hide-ani');
 };
@@ -739,10 +739,9 @@ const nodeNames1 = ['무대_일반공연:그룹#6']
 const nodeNames2 = ['무대_뮤지컬:그룹#5']
 const nodeNames3 = ['무대_음악공연:그룹#169']
 const nodeNames = ['무대_일반공연:그룹#6', '무대_뮤지컬:그룹#5', '무대_음악공연:그룹#169']
+const btnStageChange = document.getElementById('btn_stage_change');
 
 function btn_stage_change() {
-  // 무대장치 onoff 시 좌석해제
-  //reset_btn_seatmap();
   nodeNames.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
   viewer.requestFrame();
 
@@ -750,25 +749,28 @@ function btn_stage_change() {
     nodeNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame();
     stage_change_step = 1
+    btnStageChange.textContent = "일반";
   } else if (stage_change_step == 1) {
     nodeNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame();
     stage_change_step = 2
+    btnStageChange.textContent = "뮤지컬";
   } else if (stage_change_step == 2) {
     nodeNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame();
     stage_change_step = 0
+    btnStageChange.textContent = "클래식";
   }
 
   // 무대변경 메시지 팝업 표시
-  const btnStage = document.getElementById('btn_stage_change');
-  if (btnStage) {
-    btnStage.setAttribute('data-msg', '무대장치' + stage_change_step);
-    btnStage.classList.add('show-msg');
-    setTimeout(() => {
-      btnStage.classList.remove('show-msg');
-    }, 2000);
-  }
+  // const btnStage = document.getElementById('btn_stage_change');
+  // if (btnStage) {
+  //   btnStage.setAttribute('data-msg', '무대장치' + stage_change_step);
+  //   btnStage.classList.add('show-msg');
+  //   setTimeout(() => {
+  //     btnStage.classList.remove('show-msg');
+  //   }, 2000);
+  // }
 };
 
 
@@ -777,29 +779,25 @@ const nodeOPNames1 = ['op_일반:Group#378']
 const nodeOPNames2 = ['op_객석:그룹#366']
 const nodeOPNames3 = ['op_오케스트라:Group#312']
 const nodeOPNames = ['op_오케스트라:Group#312', 'op_객석:그룹#366', 'op_일반:Group#378']
+const btnOPChange = document.getElementById('btn_op_change');
 
 function btn_op_change() {
-  // 무대변경 메시지 팝업 표시
-  const btnStage = document.getElementById('btn_op_change');
-
   nodeOPNames.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
-  // viewer.requestFrame()
-
   // OP좌석  onoff 시
   if (op_change_step == 0) {
     nodeOPNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame()
-    btnStage.textContent = "일반";
+    btnOPChange.textContent = "일반";
     op_change_step = 1
   } else if (op_change_step == 1) {
     nodeOPNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame()
-    btnStage.textContent = "객석";
+    btnOPChange.textContent = "객석";
     op_change_step = 2
   } else if (op_change_step == 2) {
     nodeOPNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame()
-    btnStage.textContent = "OP";
+    btnOPChange.textContent = "OP";
     op_change_step = 0
   }
 
