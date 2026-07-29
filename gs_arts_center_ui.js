@@ -16,6 +16,8 @@ let currentSeatViewId = null;
 let isNavigating = false;
 
 function initUIOnSceneReady() {
+
+  document.title = 'GS아트센터 좌석 시야 서비스';
   const banner = document.getElementById('start-banner');
 
   // 시작 배너 로고(banner-inner) 0.5초간 페이드아웃 애니메이션 발동
