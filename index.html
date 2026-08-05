@@ -141,6 +141,12 @@
             VR
           </div><!-- NS
        -->
+
+
+          <div id="tour-button" class="fullscreen-specific menu-button menu-item ui-hoverable">
+            <img src="img/03_free_move_page_ui/tour.svg" />
+          </div>
+
           <div id="help2-button" class="fullscreen-specific menu-button menu-item ui-hoverable"
             onclick="btn_help_show();">
           </div>
@@ -156,13 +162,31 @@
     </div>
   </div>
 
-  <div id="view-list" class="ui-top ui-right" style="display: none">
+  <div id="view-list" class="ui-top ui-right">
     <div id="view-list-slide">
-      <div id="tour-button" class="" style="display: none" onclick="btn_autotour()">
+      <!-- <div id="tour-button" class="" style="display: none" onclick="btn_autotour()">
         <span>자동투어</span>
         <img src="img/03_free_move_page_ui/FMP_icon2_auto1.png" class="auto-run-ani">
         <img src="img/03_free_move_page_ui/FMP_icon2_auto2.png" class="auto-pause-ani">
+      </div> -->
+
+      <div id="view-list-items2">
+
+        <div class="nav-control2">
+          <button class="ui-panel nav-text" onclick="btn_seatmap_open()">좌석 다시 선택하기</button>
+        </div>
+        <div class="nav-control2">
+          <button id="btn_stage_change" class="ui-panel nav-text" onclick="btn_stage_change()">무대 세트 변경</button>
+        </div>
+        <div class="nav-control2">
+          <button id="btn_op_change" class="ui-panel nav-text" onclick="btn_op_change()">OP석 변경</button>
+        </div>
+        <div class="nav-control2">
+          <button id="btn_stage_look" class="ui-panel nav-text" onclick="btn_stage_look()">무대 바라보기</button>
+        </div>
       </div>
+
+
 
       <div id="view-list-items" class="ui-scrollbar">
         <div class="view ui-hoverable ui-panel"></div>
@@ -535,13 +559,6 @@
         </button>
         <!-- <div class="bar"></div> -->
       </div>
-      <div class="nav-control">
-        <button id="btn_stage_change" class="nav-text" onclick="btn_stage_change()">무대변경</button>
-        <!-- <div class="bar"></div> -->
-        <button id="btn_op_change" class="nav-text" onclick="btn_op_change()">OP석 변경</button>
-        <button id="btn_stage_look" class="nav-text" onclick="btn_stage_look()">무대 바라보기</button>
-      </div>
-
       <div class="nav-control">
         <div id="btn_stage_notice" class="nav-text">*실제 시야는 무대 세트에 따라 차이가 있을 수 있습니다.</div>
       </div>

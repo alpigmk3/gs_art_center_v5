@@ -787,7 +787,7 @@ function btn_op_change() {
   if (op_change_step == 0) {
     nodeOPNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame()
-    btnOPChange.textContent = "일반";
+    btnOPChange.textContent = "무대";
     op_change_step = 1
   } else if (op_change_step == 1) {
     nodeOPNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
@@ -797,7 +797,7 @@ function btn_op_change() {
   } else if (op_change_step == 2) {
     nodeOPNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
     viewer.requestFrame()
-    btnOPChange.textContent = "OP";
+    btnOPChange.textContent = "오케스트라";
     op_change_step = 0
   }
 

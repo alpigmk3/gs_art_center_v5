@@ -1516,35 +1516,6 @@ svg rect[id^="View_"].selected-active {
     -webkit-user-drag: none !important;
 }
 
-#tour-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
-    height: 32px;
-    text-align: center;
-    line-height: 28px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #000000;
-    background-color: rgba(255, 255, 255, 0.55);
-    /* backdrop-filter: blur(5px); */
-    border: 0;
-    cursor: pointer;
-    padding: 0;
-    margin: 0 0 6px 0;
-    transition: all 0.3s ease;
-    letter-spacing: 2px;
-}
-
-#tour-button:hover {
-    background-color: rgba(255, 255, 255, 0.85);
-}
-
-#tour-button:active {
-    background-color: rgba(255, 255, 255);
-}
-
 .auto-run-ani {
     margin-left: 14px;
     width: 12px;
@@ -1559,32 +1530,18 @@ svg rect[id^="View_"].selected-active {
     display: none;
 }
 
-.tour-on {
-    animation: none;
-}
-
-.tour-on .auto-run-ani {
+/* 
+#view-list-items {
     display: none;
-}
-
-.tour-on .auto-pause-ani {
-    display: block;
-    animation: blinker 1s linear infinite;
-}
+    opacity: 0;
+} */
 
 #view-list-items {
     padding-left: 6px;
     border-left: 6px solid rgba(255, 255, 255, 0.5);
-    display: grid;
+    /* display: grid; */
+    display: none;
     gap: 4px;
-    /* overflow: hidden; */
-}
-
-.ui-panel {
-    color: black;
-    background-color: rgba(255, 255, 255, 0.5);
-    font-size: 13px;
-    font-weight: 600;
 }
 
 #view-list-items .ui-panel {
@@ -1595,6 +1552,40 @@ svg rect[id^="View_"].selected-active {
     line-height: 20px;
     vertical-align: middle;
     text-align: left;
+}
+
+.nav-control2 {
+    width: auto;
+    display: flex;
+    align-items: center;
+    border-left: #ffffff8c 6px solid;
+    padding-left: 8px;
+}
+
+#view-list-items2 {
+    display: grid;
+    gap: 4px;
+    margin: 0 0 8px 0;
+}
+
+#view-list-items2 .ui-panel {
+    border: 0;
+    width: 150px;
+    height: 36px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: bold;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+.ui-panel {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    font-weight: 600;
 }
 
 #view-list-folder {
@@ -1670,6 +1661,8 @@ view ui-hoverable ui-panel active-view
     margin-left: -4px;
 }
 
+
+#tour-button,
 #home-button,
 #help2-button,
 #fullscreen-button {
@@ -1684,6 +1677,7 @@ button:focus {
 }
 
 /* FMP Navigation Buttons State Styling */
+#tour-button,
 #home-button,
 #help2-button,
 #fullscreen-button,
@@ -1697,6 +1691,7 @@ button:focus {
     transition: background-image 0.15s ease, background-color 0.15s ease;
 }
 
+#tour-button,
 #home-button,
 #help2-button,
 #fullscreen-button {
@@ -1713,6 +1708,7 @@ button:focus {
     height: 44px !important;
 }
 
+#tour-button:hover,
 #home-button:hover,
 #help2-button:hover,
 #fullscreen-button:hover,
@@ -1721,6 +1717,7 @@ button:focus {
     background-color: rgba(255, 255, 255, 0.85) !important;
 }
 
+#tour-button:active,
 #home-button:active,
 #help2-button:active,
 #fullscreen-button:active,
@@ -2287,4 +2284,89 @@ svg rect[id^="View_"].selected-active {
 
 #btn_stage_notice:active {
     background-color: rgba(255, 255, 255, 0.55);
+}
+
+
+.box {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    /* 부모 요소의 기본 내용(글자 등) 스타일 */
+}
+
+.box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('your-image.jpg');
+    /* 적용할 백그라운드 이미지 */
+    background-size: cover;
+    animation: blink-bg 1s infinite ease-in-out;
+    z-index: -1;
+    /* 텍스트가 이미지 뒤로 숨지 않도록 조절 */
+}
+
+
+
+
+
+/* 
+
+.tour-on .auto-run-ani {
+    display: none;
+}
+
+.tour-on .auto-pause-ani {
+    display: block;
+    animation: blinker 1s linear infinite;
+} */
+
+
+#tour-button {
+    position: relative;
+    animation: none;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#tour-button img {
+    margin-top: -3px;
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+}
+
+#tour-button.tour-on img {
+    animation: blinker 1s linear infinite;
+}
+
+
+/* 
+#tour-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-image: url('img/03_free_move_page_ui/tour.svg') !important;
+    animation: blink-bg 1s infinite ease-in-out;
+}
+
+*/
+@keyframes blink-bg {
+
+    0%,
+    100% {
+        background-color: #ffffff;
+    }
+
+    50% {
+        background-color: #ff0000;
+    }
 }
