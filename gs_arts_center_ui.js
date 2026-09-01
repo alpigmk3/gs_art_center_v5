@@ -33,35 +33,32 @@ function initUIOnSceneReady() {
   }
 
   // =========================================================================
-  // [시퀀스 2] T = 1000ms (1.0초 후): 메인 커스텀 UI 및 뷰어 메뉴 활성화
+  // [시퀀스 2] T = 500ms (0.7초 후): 메인 커스텀 UI 및 뷰어 메뉴 활성화
   // =========================================================================
   setTimeout(() => {
     showCustomUI();
     viewer.menuVisible = true;
-  }, 1000);
+  }, 700);
 
   // =========================================================================
-  // [시퀀스 3] T = 1500ms (1.5초 후): 시작 배너 DOM 요소 숨김 (display: none)
+  // [시퀀스 3] T = (0.9초 후): 시작 배너 DOM 요소 숨김 (display: none)
   // =========================================================================
   setTimeout(() => {
     if (banner) {
       banner.style.display = 'none';
     }
     btn_seatmap_open();
-  }, 1500);
+  }, 900);
 
   // =========================================================================
-  // [시퀀스 4] T = 1550ms (1.55초 후): 3D 무대 커튼 노드 초기화 및 씬 렌더링 갱신
+  // [시퀀스 4] 3D 무대('무대_일반공연') 및 OP석('op_일반') 노드 초기화
   // =========================================================================
-  // setTimeout(() => {
-  //   const curtainNodes = ['curtain:그룹#152', 'curtain_1', 'curtain_2', 'curtian_3'];
-  //   curtainNodes.forEach((name) => {
-  //     for (const node of viewer.findNodesOfType(name)) {
-  //       node.show();
-  //     }
-  //   });
-  //   viewer.requestFrame();
-  // }, 1550);
+  setTimeout(() => {
+    btn_set_stage('normal');
+    btn_set_op('stage');
+
+    body_end_autoClick();
+  }, 1200);
 };
 
 function reset_seatmap() {
@@ -69,66 +66,26 @@ function reset_seatmap() {
 
   const btn_seatmap_floor = document.getElementById('btn_seatmap_floor');
   const btn_seatmap_text = document.getElementById('btn_seatmap_text');
-  btn_seatmap_floor.innerText = '';
-  btn_seatmap_text.innerText = '';
+  if (btn_seatmap_floor) btn_seatmap_floor.innerText = '';
+  if (btn_seatmap_text) btn_seatmap_text.innerText = '';
   const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
-  btn_seatmap_select_title.style.display = 'block';
+  if (btn_seatmap_select_title) btn_seatmap_select_title.style.display = 'block';
 
   const btn_seatmap = document.getElementById('btn_seatmap');
   if (btn_seatmap) btn_seatmap.classList.remove('has-selection');
+
+  const boxSeatmapBtn = document.getElementById('box_seatmap_btn');
+  if (boxSeatmapBtn) boxSeatmapBtn.style.display = 'none';
 }
 
 function reset_btn_seatmap() {
-  currentSeatViewId = null;
-
-  const btn_seatmap_floor = document.getElementById('btn_seatmap_floor');
-  const btn_seatmap_text = document.getElementById('btn_seatmap_text');
-  btn_seatmap_floor.innerText = '';
-  btn_seatmap_text.innerText = '';
-  const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
-  btn_seatmap_select_title.style.display = 'block';
-
-  const btn_seatmap = document.getElementById('btn_seatmap');
-  if (btn_seatmap) btn_seatmap.classList.remove('has-selection');
-
+  reset_seatmap();
   showCustomUI();
   viewer.menuVisible = true;
 }
 
 function btn_autotour() {
   reset_seatmap();
-}
-
-function btn_stage_look() {
-  if (isNavigating) return;
-  // move 3D 
-  const view = new WALK.View();
-  view.position = viewer.getCameraPosition();
-
-  const m = new THREE.Matrix4();
-  m.lookAt(view.position, vec_LookAt, new THREE.Vector3(0, 0, 1));
-  let ves = new THREE.Euler();
-  ves.setFromRotationMatrix(m, 'ZYX');
-
-  // 1. 카메라에서 바라볼 목표점(vec_LookAt)까지의 상대 거리 벡터 계산
-  var dx = vec_LookAt.x - view.position.x;
-  var dy = vec_LookAt.y - view.position.y;
-  var dz = vec_LookAt.z - view.position.z;
-
-  // 2. 수평 거리(바닥면 거리) 계산
-  var horizontalDistance = Math.sqrt(dx * dx + dy * dy);
-
-  // 3. 삼각함수를 통한 정확한 Yaw 및 Pitch 값 추출
-  // Shapespark 좌표계 기준에 맞춘 아크탄젠트/아크사인 계산
-  //view.rotation.yaw = Math.atan2(dy, dx);
-  view.rotation.yaw = ves.z;
-  view.rotation.pitch = Math.atan2(dz, horizontalDistance); // 높이차(dz)와 수평거리 비율로 피치 계산
-
-  isNavigating = true;
-  viewer.switchToView(view);
-  setTimeout(() => {
-    isNavigating = false;
-  }, 1200);
 }
 
 
@@ -182,6 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const btn_seatmap = document.getElementById('btn_seatmap');
       if (btn_seatmap) btn_seatmap.classList.add('has-selection');
+
+      const boxSeatmapBtn = document.getElementById('box_seatmap_btn');
+      if (boxSeatmapBtn) boxSeatmapBtn.style.display = 'flex';
 
       // move 3D 
       const view = new WALK.View();
@@ -731,81 +691,202 @@ function btn_help_hide() {
 }
 
 
-var stage_change_step = 1;
-// 무대_일반공연:그룹#6
-// 무대_뮤지컬:그룹#5
-// 무대_음악공연:그룹#169
-const nodeNames1 = ['무대_일반공연:그룹#6']
-const nodeNames2 = ['무대_뮤지컬:그룹#5']
-const nodeNames3 = ['무대_음악공연:그룹#169']
-const nodeNames = ['무대_일반공연:그룹#6', '무대_뮤지컬:그룹#5', '무대_음악공연:그룹#169']
-const btnStageChange = document.getElementById('btn_stage_change');
+const nodeStageNormal = ['무대_일반공연'];
+const nodeStageClassic = ['무대_음악공연'];
+const nodeStageMusical = ['무대_뮤지컬'];
+const allStageNodeNames = ['무대_일반공연', '무대_음악공연', '무대_뮤지컬'];
 
-function btn_stage_change() {
-  nodeNames.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
+function btn_set_stage(stageType) {
+  allStageNodeNames.forEach((name) => {
+    for (const node of viewer.findNodesOfType(name)) {
+      node.hide();
+    }
+  });
+
+  let targetNodes = [];
+  if (stageType === 'normal') {
+    targetNodes = nodeStageNormal;
+  } else if (stageType === 'classic') {
+    targetNodes = nodeStageClassic;
+  } else if (stageType === 'musical') {
+    targetNodes = nodeStageMusical;
+  }
+
+  targetNodes.forEach((name) => {
+    for (const node of viewer.findNodesOfType(name)) {
+      node.show();
+    }
+  });
   viewer.requestFrame();
 
-  if (stage_change_step == 0) {
-    nodeNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-    viewer.requestFrame();
-    stage_change_step = 1
-    btnStageChange.textContent = "일반";
-  } else if (stage_change_step == 1) {
-    nodeNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-    viewer.requestFrame();
-    stage_change_step = 2
-    btnStageChange.textContent = "뮤지컬";
-  } else if (stage_change_step == 2) {
-    nodeNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-    viewer.requestFrame();
-    stage_change_step = 0
-    btnStageChange.textContent = "클래식";
+  const btnNormal = document.getElementById('btn_stage_normal');
+  const btnClassic = document.getElementById('btn_stage_classic');
+  const btnMusical = document.getElementById('btn_stage_musical');
+
+  if (btnNormal) btnNormal.classList.toggle('active', stageType === 'normal');
+  if (btnClassic) btnClassic.classList.toggle('active', stageType === 'classic');
+  if (btnMusical) btnMusical.classList.toggle('active', stageType === 'musical');
+}
+
+function btn_stage_normal() {
+  btn_set_stage('normal');
+}
+
+function btn_stage_classic() {
+  btn_set_stage('classic');
+}
+
+function btn_stage_musical() {
+  btn_set_stage('musical');
+}
+
+
+const nodeOPStage = ['op_일반'];
+const nodeOPSeat = ['op_객석'];
+const nodeOPOrch = ['op_오케스트라'];
+const allOPNodeNames = ['op_일반', 'op_객석', 'op_오케스트라'];
+
+function btn_set_op(opType) {
+  allOPNodeNames.forEach((name) => {
+    for (const node of viewer.findNodesOfType(name)) {
+      node.hide();
+    }
+  });
+
+  let targetNodes = [];
+  if (opType === 'stage') {
+    targetNodes = nodeOPStage;
+  } else if (opType === 'seat') {
+    targetNodes = nodeOPSeat;
+  } else if (opType === 'orch') {
+    targetNodes = nodeOPOrch;
   }
 
-  // 무대변경 메시지 팝업 표시
-  // const btnStage = document.getElementById('btn_stage_change');
-  // if (btnStage) {
-  //   btnStage.setAttribute('data-msg', '무대장치' + stage_change_step);
-  //   btnStage.classList.add('show-msg');
-  //   setTimeout(() => {
-  //     btnStage.classList.remove('show-msg');
-  //   }, 2000);
-  // }
-};
+  targetNodes.forEach((name) => {
+    for (const node of viewer.findNodesOfType(name)) {
+      node.show();
+    }
+  });
+  viewer.requestFrame();
+
+  const btnStage = document.getElementById('btn_op_stage');
+  const btnSeat = document.getElementById('btn_op_seat');
+  const btnOrch = document.getElementById('btn_op_orch');
+
+  if (btnStage) btnStage.classList.toggle('active', opType === 'stage');
+  if (btnSeat) btnSeat.classList.toggle('active', opType === 'seat');
+  if (btnOrch) btnOrch.classList.toggle('active', opType === 'orch');
+}
+
+function btn_op_stage() {
+  btn_set_op('stage');
+}
+
+function btn_op_seat() {
+  btn_set_op('seat');
+}
+
+function btn_op_orch() {
+  btn_set_op('orch');
+}
 
 
-var op_change_step = 1;
-const nodeOPNames1 = ['op_일반:Group#378']
-const nodeOPNames2 = ['op_객석:그룹#366']
-const nodeOPNames3 = ['op_오케스트라:Group#312']
-const nodeOPNames = ['op_오케스트라:Group#312', 'op_객석:그룹#366', 'op_일반:Group#378']
-const btnOPChange = document.getElementById('btn_op_change');
+function body_end_autoClick() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var targetIdsString = urlParams.get('autoClick');
+  if (!targetIdsString) return;
 
-function btn_op_change() {
-  nodeOPNames.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.hide(); } })
-  // OP좌석  onoff 시
-  if (op_change_step == 0) {
-    nodeOPNames1.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-    viewer.requestFrame()
-    btnOPChange.textContent = "무대";
-    op_change_step = 1
-  } else if (op_change_step == 1) {
-    nodeOPNames2.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-    viewer.requestFrame()
-    btnOPChange.textContent = "객석";
-    op_change_step = 2
-  } else if (op_change_step == 2) {
-    nodeOPNames3.forEach((name) => { for (const node of viewer.findNodesOfType(name)) { node.show(); } })
-    viewer.requestFrame()
-    btnOPChange.textContent = "오케스트라";
-    op_change_step = 0
+  var allowedButtons = ['tour-button', 'fullscreen-button', 'btn_seatmap_open', 'btn_stage_normal', 'btn_stage_classic', 'btn_stage_musical', 'btn_op_stage', 'btn_op_seat', 'btn_op_orch'];
+  var seatViewIds = new Set();
+
+  // 1. 좌석 View_ID 수집
+  function loadSeatViewIds() {
+    if (typeof GS_ARTS_CENTER_SEAT_MAP_DATA !== 'undefined' && Array.isArray(GS_ARTS_CENTER_SEAT_MAP_DATA)) {
+      GS_ARTS_CENTER_SEAT_MAP_DATA.forEach(function (seat) {
+        if (seat && typeof seat.View_ID === 'string' && seat.View_ID.trim() !== '') {
+          seatViewIds.add(seat.View_ID.trim());
+        }
+      });
+      console.log('[GS Arts] 좌석 View_ID 로딩 완료:', seatViewIds.size, '개');
+      return true;
+    }
+    return false;
   }
 
-  // if (btnStage) {
-  //   btnStage.setAttribute('data-msg', 'OP좌석' + op_change_step);
-  //   btnStage.classList.add('show-msg');
-  //   setTimeout(() => {
-  //     btnStage.classList.remove('show-msg');
-  //   }, 2000);
-  // }
-};
+  // 2. 최대 10초(2.5초 간격) 좌석 데이터 로딩 대기
+  var dataReady = loadSeatViewIds();
+  if (!dataReady) {
+    var dataWaitCount = 0;
+    var dataWaitTimer = setInterval(function () {
+      dataWaitCount++;
+      if (loadSeatViewIds()) {
+        clearInterval(dataWaitTimer);
+      } else if (dataWaitCount >= 20) {
+        clearInterval(dataWaitTimer);
+        console.warn('[GS Arts] GS_ARTS_CENTER_SEAT_MAP_DATA를 찾지 못했습니다.');
+      }
+    }, 2500);
+  }
+
+  // 3. 클릭 대상 필터링
+  var targetIds = targetIdsString.split(',').map(function (id) {
+    return id.trim();
+  }).filter(function (id) {
+    if (allowedButtons.indexOf(id) > -1 || seatViewIds.has(id)) return true;
+    return /^View_[123]F_/.test(id);
+  });
+
+  console.log('[GS Arts] autoClick 요청:', targetIds);
+
+  // 4. DOM 요소 대기 함수
+  function waitForElement(id, callback) {
+    var elapsed = 0;
+    var checkInterval = 100;
+    var maxWaitTime = 10000;
+
+    var timer = setInterval(function () {
+      var element = document.getElementById(id);
+      if (element) {
+        clearInterval(timer);
+        callback(element);
+      } else {
+        elapsed += checkInterval;
+        if (elapsed >= maxWaitTime) {
+          clearInterval(timer);
+          console.warn('[GS Arts] 요소를 찾을 수 없습니다:', id);
+          callback(null);
+        }
+      }
+    }, checkInterval);
+  }
+
+  // 5. 재귀 순차 클릭 실행
+  var currentIndex = 0;
+  var delayBetweenClicks = 2000;
+
+  function clickNextButton() {
+    if (currentIndex >= targetIds.length) {
+      console.log('[GS Arts] autoClick 완료');
+      return;
+    }
+
+    var currentId = targetIds[currentIndex];
+    waitForElement(currentId, function (targetElement) {
+      if (targetElement) {
+        var event = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
+        targetElement.dispatchEvent(event);
+        console.log('[GS Arts] 순차적 클릭 완료:', currentId, '(' + (currentIndex + 1) + '/' + targetIds.length + ')');
+      } else {
+        console.warn('[GS Arts] 클릭할 요소가 없습니다:', currentId);
+      }
+
+      currentIndex++;
+      setTimeout(clickNextButton, delayBetweenClicks);
+    });
+  }
+
+  // 6. 1500ms 후 시작
+  setTimeout(function () {
+    clickNextButton();
+  }, 1500);
+}

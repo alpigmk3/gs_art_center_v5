@@ -1,0 +1,17 @@
+<script>
+  const viewer = WALK.getViewer();
+
+  // A-1 선택 함수 (A그룹 내 독립 제어)
+  function selectA1() {
+    viewer.findObject('무대_일반공연').show();
+    viewer.findObject('무대_뮤지컬').hide();
+    viewer.findObject('무대_음악공연연').hide();
+  }
+
+  // B-3 선택 함수 (B그룹 내 독립 제어)
+  function selectB3() {
+    viewer.findObject('op일반').hide();
+    viewer.findObject('op객석').hide();
+    viewer.findObject('op오케스트라').show();
+  }
+</script>

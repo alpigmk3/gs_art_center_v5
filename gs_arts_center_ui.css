@@ -205,6 +205,33 @@ textarea,
     display: inline-block;
 }
 
+#box_seatmap_btn {
+    display: none;
+    height: 44px;
+}
+
+#box_seatmap_open_btn {
+    display: flex;
+}
+
+#btn_seatmap_open {
+    width: 318px;
+    height: 42px;
+    font-size: 16px;
+    font-weight: bold;
+    vertical-align: middle;
+    letter-spacing: 1px;
+    margin: 0 !important;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    gap: 3px;
+    padding: 0 4px;
+    overflow: hidden;
+}
+
 #btn_seatmap_select_title {
     letter-spacing: 1px;
 }
@@ -212,7 +239,7 @@ textarea,
 /* 좌석선택 버튼 (1행) - 내부 요소 한 줄(row) 표시 처리 */
 #btn_seatmap {
     position: relative;
-    width: 238px;
+    width: 230px;
     height: 44px;
     font-size: 15px;
     font-weight: bold;
@@ -232,27 +259,10 @@ textarea,
     overflow: hidden;
 }
 
-/* 3개 주요 기능 버튼 (무대 바라보기, 무대변경, OP석 변경) 크기 완전 동일 지정 */
-#btn_stage_look,
-#btn_stage_change,
-#btn_op_change {
-    position: relative;
-    width: 106px;
-    /* 3개 버튼 모두 215px로 크기 완전 동일 */
-    height: 44px;
-    /* 높이 44px 통일 */
-    vertical-align: middle;
-    letter-spacing: 1px;
-    margin: 0;
-    margin-right: 4px;
-}
 
-#btn_stage_look {
-    margin-right: 0px;
-}
 
 #btn_stage_notice {
-    width: 326px;
+    width: 318px;
     height: 22px;
     font-size: 10px;
     margin: 0;
@@ -592,7 +602,7 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 140px;
+    width: 110px;
     padding: 2px 24px;
 }
 
@@ -600,14 +610,13 @@ textarea,
     background-color: #ffffff;
     color: rgba(0, 0, 0, 0.35);
     border: 0;
-    padding: 6px 26px 6px 2px;
+    padding: 4px 12px;
+    cursor: pointer;
+    text-align: center;
     font-size: 22px;
     font-weight: 700;
-    cursor: pointer;
-    text-align: right;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-right: 6px solid #efefef;
-
+    border-left: 6px solid #efefef;
 }
 
 .floor-btn:hover {
@@ -733,8 +742,7 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 140px;
-    /* border-left: 6px solid #F2F2F2; */
+    width: 110px;
     padding: 0 10px;
 }
 
@@ -1554,26 +1562,52 @@ svg rect[id^="View_"].selected-active {
     text-align: left;
 }
 
-.nav-control2 {
-    width: auto;
-    display: flex;
-    align-items: center;
-    border-left: #ffffff8c 6px solid;
-    padding-left: 8px;
-}
-
 #view-list-items2 {
     display: grid;
     gap: 4px;
     margin: 0 0 8px 0;
 }
 
+.view-list-items2-box {
+    display: flex;
+    width: 140px;
+    height: 110px;
+}
+
+.view-list-items2-box-title {
+    width: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px;
+    margin: 0 4px;
+}
+
+.view-list-items2-box-title span {
+    line-height: 1.2;
+}
+
+.view-list-items2-box-list {
+    /* display: grid; */
+    /* flex: 1; */
+    display: flex;
+    gap: 4px;
+    margin: 0 0 8px 0;
+    flex-direction: column;
+}
+
 #view-list-items2 .ui-panel {
+    flex: 1;
     border: 0;
-    width: 162px;
-    height: 36px;
+    width: 92px;
+    height: 34px;
     margin: 0;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
     vertical-align: middle;
     text-align: center;
