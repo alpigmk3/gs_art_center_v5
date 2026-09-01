@@ -1580,16 +1580,18 @@ svg rect[id^="View_"].selected-active {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.65);
     color: #000000;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: bold;
     padding: 10px;
     margin: 0 4px;
 }
 
 .view-list-items2-box-title span {
     line-height: 1.2;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .view-list-items2-box-list {
