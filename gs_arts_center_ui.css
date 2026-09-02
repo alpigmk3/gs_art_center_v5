@@ -206,8 +206,19 @@ textarea,
 }
 
 #box_seatmap_btn {
-    display: none;
+    display: flex;
     height: 44px;
+    max-height: 50px;
+    transition: transform 1s ease, opacity 1s ease;
+}
+
+#box_seatmap_btn.hide-ani {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+    /* max-height: 0; */
+    /* margin-bottom: -8px;
+    border-right-color: transparent; */
 }
 
 #box_seatmap_open_btn {
@@ -466,7 +477,7 @@ textarea,
 }
 
 .custom-ui-bottom-left.hide-ani {
-    transform: translateX(-100%) translateX(-40px) !important;
+    transform: translateX(-100%) !important;
     opacity: 0 !important;
     pointer-events: none !important;
 }

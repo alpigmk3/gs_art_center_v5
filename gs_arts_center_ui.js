@@ -75,7 +75,7 @@ function reset_seatmap() {
   if (btn_seatmap) btn_seatmap.classList.remove('has-selection');
 
   const boxSeatmapBtn = document.getElementById('box_seatmap_btn');
-  if (boxSeatmapBtn) boxSeatmapBtn.style.display = 'none';
+  if (boxSeatmapBtn) boxSeatmapBtn.classList.add('hide-ani');
 }
 
 function reset_btn_seatmap() {
@@ -96,7 +96,8 @@ const btn_menu_bar_folder = document.getElementById('menu-bar-folder');
 
 function btn_seatmap_open() {
   seatmapOverlay.classList.add('active');
-  reset_seatmap();
+  const boxSeatmapBtn = document.getElementById('box_seatmap_btn');
+  if (boxSeatmapBtn) boxSeatmapBtn.classList.remove('hide-ani');
   hideCustomUI();
   if (window.setZoomLevel) window.setZoomLevel(0, true);
   if (viewer._autoTour.isRunning() == true) {
@@ -141,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (btn_seatmap) btn_seatmap.classList.add('has-selection');
 
       const boxSeatmapBtn = document.getElementById('box_seatmap_btn');
-      if (boxSeatmapBtn) boxSeatmapBtn.style.display = 'flex';
+      if (boxSeatmapBtn) boxSeatmapBtn.classList.remove('hide-ani');
 
       // move 3D 
       const view = new WALK.View();
@@ -634,10 +635,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
-      // const seatmapOverlay = document.getElementById('seatmap-overlay');
-      // if (seatmapOverlay) seatmapOverlay.classList.remove('active');
-      // reset_btn_seatmap();
       btnSeatmap_close();
+      return;
+    }
+    const boxSeatmapBtn = document.getElementById('box_seatmap_btn');
+    if (boxSeatmapBtn && !boxSeatmapBtn.classList.contains('hide-ani')) {
+      reset_seatmap();
     }
   });
 });
