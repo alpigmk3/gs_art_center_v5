@@ -34,3 +34,12 @@
 ### 7. URL 파라미터 `autoClick` 자동화 기능 고도화
 - `allowedButtons` 및 정규식(`^View_[123]F_`) 기반 1,296개 좌석 View_ID 자동 판별
 - DOM 렌더링 대기(`waitForElement`) 및 2,000ms 간격 순차 클릭 실행 로직 적용
+
+### 8. 좌석 선택 컨트롤(#box_seatmap_btn) 키보드 입력 숨김 처리
+- 좌석 선택 네비게이션이 노출된 상태에서 ESC뿐만 아니라 임의의 키보드 입력 발생 시 `reset_seatmap()`을 호출하여 좌석 선택 바 자동 숨김
+
+### 9. 좌석 배치도 오픈 시 UI 상태 및 상위 컨테이너 애니메이션 연동
+- `btn_seatmap_open()` 실행 시 내부 `reset_seatmap()`을 제거하고 `#box_seatmap_btn`의 `hide-ani`를 해제하여, 상위 컨테이너(`.custom-ui-bottom-left.hide-ani`)의 일괄 애니메이션으로 자연스럽게 숨겨지도록 수정
+
+### 10. 좌석 컨트롤 애니메이션 시간 동기화
+- `#box_seatmap_btn`의 CSS transition 시간을 `.custom-ui-bottom-left`와 동일하게 `1s ease`로 일치시켜 UI 전환 시 일체감 강화
