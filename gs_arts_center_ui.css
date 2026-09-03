@@ -213,7 +213,7 @@ textarea,
 }
 
 #box_seatmap_btn.hide-ani {
-    transform: translateX(-100%);
+    transform: translateX(-150%) !important;
     opacity: 0;
     pointer-events: none;
     /* max-height: 0; */
@@ -466,7 +466,8 @@ textarea,
 }
 
 .custom-ui-top-right.hide-ani {
-    transform: translateX(100%) translateX(40px) !important;
+    transform: translateX(-150%) !important;
+    /* transform: translateX(100%) translateX(40px) !important; */
     opacity: 0 !important;
     pointer-events: none !important;
 }
