@@ -1,4 +1,37 @@
-# 금일 날짜: 2026-09-03
+# 금일 날짜: 2026-09-16
+
+## 작업 내용
+
+### 1. 좌석 배치도 층 선택 UI 롤백 및 복원
+- `index.html`: `.seatmap-floor-selector` 내 층 선택 버튼 복원 및 중복 구역 선택 버튼 정리
+- `gs_arts_center_ui.css`: `.seatmap-floor-selector`, `.floor-btn` 스타일(`width: 140px`, 우측 세로선 `border-right`, 우측 정렬 등)을 이전 디자인으로 롤백 복원
+
+### 2. 좌석 데이터 CSV to JSON 변환 스크립트 개선 및 동기화
+- `convert_csv_json.py`: `pandas` 의존성을 제거하고 파이썬 표준 `csv`, `json` 모듈로 경량화 리팩터링
+- `gs_arts_center_seatmap.csv`의 수정된 좌석 Z좌표 및 휠체어 특수문자(`♿`)를 `gs_arts_center_seatmap.json`과 `gs_arts_center_seatmap.js`로 변환/동기화 완료
+
+### 3. 좌석 선택 시 초록색 하이라이트(selected-active) 초기화(리셋) 로직 적용
+- `gs_arts_center_ui.js`: `showViewId`, `reset_seatmap`, `btn_seatmap_open`, `btnSeatmap_close` 시 기존 선택된 좌석(`svg rect.selected-active`) 상태를 일괄 초기화하여 재오픈 및 리셋 시 이전 선택 기록이 남지 않도록 처리
+
+### 4. 3D 좌석 이동 중 조작 안내 팝업창(#seat-help-popup) 구현
+- `index.html`: `t1_help-tip.png` 및 닫기 버튼(`MU_icon_Infomation_close.png`)으로 구성된 모던 팝업 추가
+- `gs_arts_center_ui.js`: 좌석 선택 후 자리 이동 중(400ms 시점) 화면 중앙에 `showSeatHelpPopup()` 표시
+- 닫기 X 버튼 호버 효과 및 클릭 시 닫기, 팝업 바깥 배경 영역 클릭 시 닫기 연동
+- 팝업 노출 10초 후 자동 닫힘 타이머(`seatHelpTimer`) 적용 및 수동 닫기 시 타이머 정리
+
+### 5. 좌석 배치도 팝업 내 우측 하단 안내 이미지(.help-tip-image) 배치 및 반응형 처리
+- `index.html`: `seatmap-popup` 직속 자식 요소로 `.help-tip-image`(`t1_help-tip.png`) 위치 재배치
+- `gs_arts_center_ui.css`: 팝업 우측 하단(`right: 8px; bottom: 8px;`)에 선명하게 정돈
+- `@media (max-width: 1024px)`: 모바일 및 작은 화면에서는 불필요한 시야 가림을 방지하도록 숨김(`display: none !important;`) 처리
+
+### 6. OP석 타입 "객석모드" 연동 및 선택 제어
+- `gs_arts_center_ui.css`: `#floor1f-zone-op` 좌석이 항상 시각적으로 표시되도록 유지하고, 기본 상태에서는 선택 불가(`pointer-events: none; opacity: 0.45`), 객석모드 활성화 시에만 선택 가능(`pointer-events: auto; opacity: 1`) 처리
+- `gs_arts_center_ui.js`: `btn_set_op('seat')` 활성화 시 `#floor1f-zone-op`에 `active` 클래스를 부여하고, `bindSeatClickEvents`에서 객석모드가 아닐 때는 OP석 클릭을 차단하도록 2중 방어 구현
+- 무대모드나 오케스트라 모드로 변경 시 기존 선택된 OP석 자동 리셋 처리
+
+---
+
+# 일자: 2026-09-03
 
 ## 작업 내용
 

@@ -1,40 +1,33 @@
+import csv
 import json
 import os
-import pandas as pd
-import numpy as np
 
 def convert_csv_to_json(csv_path, json_path, js_path):
     if not os.path.exists(csv_path):
         print(f"Error: {csv_path} 파일이 존재하지 않습니다.")
         return
 
-    df = pd.read_csv(csv_path)
     records = []
-
-    for _, row in df.iterrows():
-        record = {}
-        for col in df.columns:
-            val = row[col]
-            if pd.isna(val):
-                record[col] = None
-                continue
-            
-            if col in ["Seat_Number"]:
-                record[col] = int(val)
-            elif col in ["X", "Y", "Z"]:
-                record[col] = float(val)
-            elif col == "Display_Text":
-                try:
-                    f_val = float(val)
-                    record[col] = int(f_val) if f_val.is_integer() else f_val
-                except ValueError:
-                    record[col] = str(val)
-            else:
-                if isinstance(val, (int, float)):
-                    record[col] = int(val) if isinstance(val, float) and val.is_integer() else val
+    with open(csv_path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            record = {}
+            for col, val in row.items():
+                if val is None or val == "":
+                    record[col] = None
+                elif col == "Seat_Number":
+                    try:
+                        record[col] = int(val)
+                    except ValueError:
+                        record[col] = val
+                elif col in ("X", "Y", "Z"):
+                    try:
+                        record[col] = float(val)
+                    except ValueError:
+                        record[col] = val
                 else:
-                    record[col] = str(val)
-        records.append(record)
+                    record[col] = val
+            records.append(record)
 
     json_content = json.dumps(records, ensure_ascii=False, indent=4)
     with open(json_path, "w", encoding="utf-8") as f:
@@ -47,5 +40,5 @@ def convert_csv_to_json(csv_path, json_path, js_path):
     print(f"JS 변환 완료: {js_path}")
 
 if __name__ == "__main__":
-    csv_file = "gs_arts_center_seatmap.csv" 
+    csv_file = "gs_arts_center_seatmap.csv"
     convert_csv_to_json(csv_file, "gs_arts_center_seatmap.json", "gs_arts_center_seatmap.js")

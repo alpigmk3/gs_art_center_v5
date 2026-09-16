@@ -550,6 +550,36 @@ textarea,
     transition: transform 0.3s ease 0.7s;
 }
 
+/* 좌석 배치도 팝업 내 우측 하단 팁 이미지 */
+.seatmap-popup .help-tip-image {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seatmap-popup .help-tip-image img {
+    width: 20vw;
+    max-width: 320px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+@media (max-width: 1024px) {
+
+    .help-tip-image,
+    .seatmap-popup .help-tip-image {
+        display: none !important;
+    }
+}
+
 .seatmap-close-btn {
     position: absolute;
     top: 4px;
@@ -614,7 +644,7 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 110px;
+    width: 140px;
     padding: 2px 24px;
 }
 
@@ -622,13 +652,14 @@ textarea,
     background-color: #ffffff;
     color: rgba(0, 0, 0, 0.35);
     border: 0;
-    padding: 4px 12px;
-    cursor: pointer;
-    text-align: center;
+    padding: 6px 26px 6px 2px;
     font-size: 22px;
     font-weight: 700;
+    cursor: pointer;
+    text-align: right;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-left: 6px solid #efefef;
+    border-right: 6px solid #efefef;
+
 }
 
 .floor-btn:hover {
@@ -754,7 +785,7 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 110px;
+    width: 140px;
     padding: 0 10px;
 }
 
@@ -1174,6 +1205,87 @@ textarea,
     }
 }
 
+/* 좌석 이동 안내 팝업 (t1_help-tip) */
+.seat-help-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 960;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.seat-help-popup.show {
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+}
+
+.seat-help-card {
+    position: relative;
+    background-color: transparent;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 72vw;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+
+.seat-help-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seat-help-body img {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    display: block;
+}
+
+.seat-help-close-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    /* background-color: rgba(255, 255, 255, 0.55); */
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.seat-help-close-btn img {
+    width: 18px;
+    height: 18px;
+    display: block;
+    object-fit: contain;
+}
+
+.seat-help-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+    transform: scale(1.15);
+}
+
+.seat-help-close-btn:active {
+    background-color: #ffffff;
+    transform: scale(0.95);
+}
+
 .service-select-card {
     border: 0;
     display: flex;
@@ -1418,6 +1530,18 @@ textarea,
     top: 328px !important;
     width: 565px !important;
     height: 88px !important;
+    pointer-events: none !important;
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
+}
+
+#floor1f-zone-op.active {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+
+#floor1f-zone-op:not(.active) rect {
+    cursor: default !important;
 }
 
 #floor1f-zone-a {

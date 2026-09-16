@@ -554,6 +554,17 @@
     </div>
   </div>
 
+  <div id="seat-help-popup" class="seat-help-popup" style="display: none;">
+    <div class="seat-help-card">
+      <button class="seat-help-close-btn" aria-label="Close" onclick="hideSeatHelpPopup()">
+        <img src="img/05_manual_ui/MU_icon_Infomation_close.png" alt="close" />
+      </button>
+      <div class="seat-help-body">
+        <img src="img/05_manual_ui/t1_help-tip.png" alt="마우스 왼쪽 버튼을 클릭한 후 자유자재로 회전하여 시선을 360도 변경할 수 있습니다." />
+      </div>
+    </div>
+  </div>
+
   <div id="custom-ui-container">
     <div class="custom-ui-top-left">
       <!-- <span class="bar">|</span> GS | ARTS | CENTER -->
@@ -599,6 +610,9 @@
       <div class="seatmap-content">
         <!-- Left Floor Selection -->
         <div class="seatmap-floor-selector">
+          <button class="floor-btn active" data-floor="1F">1층</button>
+          <button class="floor-btn" data-floor="2F">2층</button>
+          <button class="floor-btn" data-floor="3F">3층</button>
         </div>
 
         <!-- Center Map Image -->
@@ -653,9 +667,6 @@
         </div>
         <!-- Right Section Selection -->
         <div class="seatmap-section-selector">
-          <button class="floor-btn active" data-floor="1F">1층</button>
-          <button class="floor-btn" data-floor="2F">2층</button>
-          <button class="floor-btn" data-floor="3F">3층</button>
           <!-- <button class="section-btn" data-floor="1F" data-zone="OP">
             <span class="section-floor-text">1층</span>
             <span class="section-line-text">OP블록</span></button>
@@ -683,10 +694,15 @@
           <button class="section-btn" data-floor="3F" data-zone="B">
             <span class="section-floor-text">3층</span>
             <span class="section-line-text">B블록</span></button>
-          <button class="section-btn" data-floor="3F" data-zone="C">
+          <!-- <button class="section-btn" data-floor="3F" data-zone="C">
             <span class="section-floor-text">3층</span>
             <span class="section-line-text">C블록</span></button> -->
         </div>
+      </div>
+
+      <!-- 좌석 배치도 우측 하단 조작 안내 팁 -->
+      <div class="help-tip-image">
+        <img src="img/05_manual_ui/t1_help-tip.png" alt="마우스 왼쪽 버튼을 클릭한 후 자유자재로 회전하여 시선을 360도 변경할 수 있습니다." />
       </div>
     </div>
   </div>
