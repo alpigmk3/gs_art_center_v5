@@ -74,10 +74,10 @@ function showSeatHelpPopup() {
     popup.offsetHeight; // force reflow
     popup.classList.add('show');
 
-    // 10초 뒤 자동 닫힘
+    // 5초 뒤 자동 닫힘
     seatHelpTimer = setTimeout(() => {
       hideSeatHelpPopup();
-    }, 10000);
+    }, 5100);
   }
 }
 

@@ -564,7 +564,7 @@ textarea,
 
 .seatmap-popup .help-tip-image img {
     width: 20vw;
-    max-width: 320px;
+    max-width: 380px;
     height: auto;
     display: block;
     object-fit: contain;
