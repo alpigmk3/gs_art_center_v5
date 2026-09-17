@@ -155,7 +155,7 @@ textarea,
     left: 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     /* 각 줄 간의 간격을 8px로 설정 */
     align-items: flex-start;
 }
@@ -167,7 +167,7 @@ textarea,
     align-items: center;
     border-right: #ffffff8c 6px solid;
     /* 오른쪽 세로 흰색 바 유지 */
-    padding-right: 8px;
+    padding-right: 5px;
 }
 
 .nav-arrow {
@@ -207,8 +207,7 @@ textarea,
 
 #box_seatmap_btn {
     display: flex;
-    height: 44px;
-    max-height: 50px;
+    height: 34px;
     transition: transform 1s ease, opacity 1s ease;
 }
 
@@ -226,8 +225,8 @@ textarea,
 }
 
 #btn_seatmap_open {
-    width: 248px;
-    height: 42px;
+    width: 238px;
+    height: 32px;
     font-size: 16px;
     font-weight: bold;
     vertical-align: middle;
@@ -243,8 +242,8 @@ textarea,
 /* 좌석선택 버튼 (1행) - 내부 요소 한 줄(row) 표시 처리 */
 #btn_seatmap {
     position: relative;
-    width: 160px;
-    height: 44px;
+    width: 170px;
+    height: 34px;
     font-size: 15px;
     font-weight: bold;
     vertical-align: middle;
@@ -264,7 +263,7 @@ textarea,
 }
 
 #btn_stage_notice {
-    width: 248px;
+    width: 238px;
     height: 22px;
     font-size: 10px;
     margin: 0;
@@ -1832,12 +1831,12 @@ button:focus {
 
 #btn_prev_seat,
 #btn_next_seat {
-    background-size: 28px 28px !important;
+    background-size: 24px 24px !important;
     /* 화살표 아이콘 크기도 높이 44px에 맞춰 키움 */
     padding: 0px;
-    width: 44px !important;
+    width: 34px !important;
     /* 버튼 높이와 동일하게 44px 정사각형으로 변경 */
-    height: 44px !important;
+    height: 34px !important;
 }
 
 #tour-button:hover,
