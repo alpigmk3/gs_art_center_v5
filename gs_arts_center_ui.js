@@ -73,11 +73,6 @@ function showSeatHelpPopup() {
     popup.style.display = 'flex';
     popup.offsetHeight; // force reflow
     popup.classList.add('show');
-
-    // 5초 뒤 자동 닫힘
-    seatHelpTimer = setTimeout(() => {
-      hideSeatHelpPopup();
-    }, 5100);
   }
 }
 
@@ -106,9 +101,6 @@ function reset_seatmap() {
   const btn_seatmap_text = document.getElementById('btn_seatmap_text');
   if (btn_seatmap_floor) btn_seatmap_floor.innerText = '';
   if (btn_seatmap_text) btn_seatmap_text.innerText = '';
-  const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
-  if (btn_seatmap_select_title) btn_seatmap_select_title.style.display = 'block';
-
   const btn_seatmap = document.getElementById('btn_seatmap');
   if (btn_seatmap) btn_seatmap.classList.remove('has-selection');
 
@@ -162,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hideAllZoneLines();
   }
 
-  function showViewId(viewId) {
+  function showViewId(viewId, showHelpPopup = true) {
     currentSeatViewId = viewId;
 
     // Highlight selected seat on map
@@ -179,11 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const displayText = ` ${seat.Zone}블록 ${seat.Row} ${seat.Display_Text}번`;
       const btn_seatmap_floor = document.getElementById('btn_seatmap_floor');
       const btn_seatmap_text = document.getElementById('btn_seatmap_text');
-      const btn_seatmap_select_title = document.getElementById('btn_seatmap_select_title');
-      btn_seatmap_select_title.style.display = 'none';
       btn_seatmap_floor.innerText = floorText;
       btn_seatmap_text.innerText = displayText;
-      btn_seatmap_select_title.style.display = 'none';
 
       const btn_seatmap = document.getElementById('btn_seatmap');
       if (btn_seatmap) btn_seatmap.classList.add('has-selection');
@@ -219,9 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       isNavigating = true;
       viewer.switchToView(view);
-      setTimeout(() => {
-        showSeatHelpPopup();
-      }, 400); // 자리 이동 중에 안내 팝업 표시
+      if (showHelpPopup) {
+        setTimeout(() => {
+          showSeatHelpPopup();
+        }, 400); // 자리 이동 중에 안내 팝업 표시
+      }
       setTimeout(() => {
         isNavigating = false;
       }, 1200);
@@ -671,6 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('btn_prev_seat').addEventListener('click', () => {
     if (isNavigating || !currentSeatViewId) return;
+    hideSeatHelpPopup();
     const index = GS_ARTS_CENTER_SEAT_MAP_DATA.findIndex(s => s.View_ID === currentSeatViewId);
 
     let prevIndex = index - 1;
@@ -680,13 +672,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (prevIndex >= 0) {
       isNavigating = true;
-      showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[prevIndex].View_ID);
+      showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[prevIndex].View_ID, false);
       setTimeout(() => { isNavigating = false; }, 1000);
     }
   });
 
   document.getElementById('btn_next_seat').addEventListener('click', () => {
     if (isNavigating || !currentSeatViewId) return;
+    hideSeatHelpPopup();
     const index = GS_ARTS_CENTER_SEAT_MAP_DATA.findIndex(s => s.View_ID === currentSeatViewId);
 
     let nextIndex = index + 1;
@@ -696,7 +689,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (nextIndex < GS_ARTS_CENTER_SEAT_MAP_DATA.length) {
       isNavigating = true;
-      showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[nextIndex].View_ID);
+      showViewId(GS_ARTS_CENTER_SEAT_MAP_DATA[nextIndex].View_ID, false);
       setTimeout(() => { isNavigating = false; }, 1000);
     }
   });

@@ -226,31 +226,24 @@ textarea,
 }
 
 #btn_seatmap_open {
-    width: 318px;
+    width: 248px;
     height: 42px;
     font-size: 16px;
     font-weight: bold;
     vertical-align: middle;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     margin: 0 !important;
     display: inline-flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    white-space: nowrap;
-    gap: 3px;
-    padding: 0 4px;
-    overflow: hidden;
-}
-
-#btn_seatmap_select_title {
-    letter-spacing: 1px;
+    padding: 0px;
 }
 
 /* 좌석선택 버튼 (1행) - 내부 요소 한 줄(row) 표시 처리 */
 #btn_seatmap {
     position: relative;
-    width: 230px;
+    width: 160px;
     height: 44px;
     font-size: 15px;
     font-weight: bold;
@@ -270,10 +263,8 @@ textarea,
     overflow: hidden;
 }
 
-
-
 #btn_stage_notice {
-    width: 318px;
+    width: 248px;
     height: 22px;
     font-size: 10px;
     margin: 0;
@@ -550,36 +541,6 @@ textarea,
     transition: transform 0.3s ease 0.7s;
 }
 
-/* 좌석 배치도 팝업 내 우측 하단 팁 이미지 */
-.seatmap-popup .help-tip-image {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    z-index: 20;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.seatmap-popup .help-tip-image img {
-    width: 21vw;
-    max-width: 380px;
-    height: auto;
-    display: block;
-    object-fit: contain;
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-@media (max-width: 1024px) {
-
-    .help-tip-image,
-    .seatmap-popup .help-tip-image {
-        display: none !important;
-    }
-}
-
 .seatmap-close-btn {
     position: absolute;
     top: 4px;
@@ -644,7 +605,7 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 140px;
+    width: 110px;
     padding: 2px 24px;
 }
 
@@ -652,14 +613,13 @@ textarea,
     background-color: #ffffff;
     color: rgba(0, 0, 0, 0.35);
     border: 0;
-    padding: 6px 26px 6px 2px;
+    padding: 4px 12px;
+    cursor: pointer;
+    text-align: center;
     font-size: 22px;
     font-weight: 700;
-    cursor: pointer;
-    text-align: right;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-right: 6px solid #efefef;
-
+    border-left: 6px solid #efefef;
 }
 
 .floor-btn:hover {
@@ -785,7 +745,7 @@ textarea,
     display: flex;
     flex-direction: column;
     gap: 0px;
-    width: 140px;
+    width: 110px;
     padding: 0 10px;
 }
 

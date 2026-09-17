@@ -1,6 +1,20 @@
-# 금일 날짜: 2026-09-16
+# 금일 날짜: 2026-09-17
 
 ## 작업 내용
+
+### 1. 좌석 배치도 층 선택 UI 재롤백
+- `index.html`: `.seatmap-floor-selector` 내 층 선택 버튼을 제거하고, 우측 `.seatmap-section-selector` 상단으로 이전 복원
+- `gs_arts_center_ui.css`: `.seatmap-floor-selector`, `.floor-btn`, `.seatmap-section-selector` 너비(`110px`), 텍스트 가운데 정렬 및 좌측 라인(`border-left: 6px solid #efefef`) 스타일로 재롤백
+
+### 2. 좌석 이동 중 조작 안내 팝업(#seat-help-popup) 자동 닫힘 제거
+- `gs_arts_center_ui.js`: `showSeatHelpPopup()`의 5초 자동 닫힘 타이머를 제거하여 사용자가 닫기 버튼 또는 배경 클릭 시 닫히도록 수정
+
+### 3. 좌석 이전/다음 이동 버튼 클릭 시 안내 팝업 미표시 처리
+- `gs_arts_center_ui.js`: `#btn_prev_seat`, `#btn_next_seat` 클릭 시 `showViewId(..., false)`를 호출하고 열려있는 팝업을 즉시 닫도록(`hideSeatHelpPopup()`) 처리
+
+---
+
+# 일자: 2026-09-16
 
 ### 1. 좌석 배치도 층 선택 UI 롤백 및 복원
 - `index.html`: `.seatmap-floor-selector` 내 층 선택 버튼 복원 및 중복 구역 선택 버튼 정리
